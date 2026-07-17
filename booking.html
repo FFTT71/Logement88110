@@ -191,9 +191,15 @@
         }
         
         .calendar-day.blocked {
-            background: #e0e0e0;
-            color: #999;
-            cursor: not-allowed;
+            background: #e0e0e0 !important;
+            color: #999 !important;
+            cursor: not-allowed !important;
+        }
+        
+        .calendar-day.blocked.selected,
+        .calendar-day.blocked.in-range {
+            background: #e0e0e0 !important;
+            color: #999 !important;
         }
         
         .calendar-day.selected {
@@ -494,6 +500,10 @@
                                 <span>Réservé</span>
                             </div>
                             <div class="legend-item">
+                                <div class="legend-color" style="background: #e0e0e0;"></div>
+                                <span>Bloqué</span>
+                            </div>
+                            <div class="legend-item">
                                 <div class="legend-color" style="background: #667eea;"></div>
                                 <span>Sélectionné</span>
                             </div>
@@ -535,7 +545,7 @@
                         <div class="form-group">
                             <label for="numGuests">Nombre de personnes *</label>
                             <select id="numGuests" required>
-                                <option value="">Sélectionnez...</option>
+                                <option value="">Chargement...</option>
                             </select>
                         </div>
                         
@@ -580,494 +590,604 @@
     </div>
     
     <script>
-    // WICHTIG: Ihre Google Apps Script URL hier einfügen!
-    const API_URL = 'https://script.google.com/macros/s/AKfyczx8ZZd17DX9rb1kqhXdUZjQD82uH6GQpY-tsPclwRVeMq5j8C/exec';
-    
-    let settings = {};
-    let bookedDates = [];
-    let blockedDates = [];
-    let currentMonth = new Date();
-    let selectedStartDate = null;
-    let selectedEndDate = null;
-    
-    console.log('🚀 Booking system starting...');
-    console.log('📡 API URL:', API_URL);
-    
-    window.addEventListener('DOMContentLoaded', async function() {
-        console.log('✅ DOM loaded');
+        // WICHTIG: IHRE GOOGLE APPS SCRIPT URL HIER EINFÜGEN!
+        const API_URL = 'https://script.google.com/macros/s/AKfyczx8ZZd17DX9rb1kqhXdUZjQD82uH6GQpY-tsPclwRVeMq5j8C/exec';
         
-        try {
-            await loadSettings();
-            await loadBookings();
-            await loadBlockedDates();
-            renderCalendar();
-            console.log('✅ All data loaded successfully');
-        } catch (error) {
-            console.error('❌ Error:', error);
-            showMessage('Erreur de chargement: ' + error.message, 'error');
-        }
-    });
-    
-    async function loadSettings() {
-    console.log('📥 Loading settings...');
-    
-    try {
-        const response = await fetch(`${API_URL}?action=getSettings`);
-        if (!response.ok) throw new Error('Failed to load settings');
-        settings = await response.json();
-        console.log('✅ Settings loaded:', settings);
+        let settings = {};
+        let bookedDates = [];
+        let blockedDates = [];
+        let currentMonth = new Date();
+        let selectedStartDate = null;
+        let selectedEndDate = null;
         
-        // FIX: Zeit-Format korrigieren
-        function formatTime(timeValue) {
-            if (!timeValue) return '';
+        console.log('🚀 Booking system starting...');
+        console.log('📡 API URL:', API_URL);
+        
+        window.addEventListener('DOMContentLoaded', async function() {
+            console.log('✅ DOM loaded');
             
-            if (typeof timeValue === 'string' && timeValue.includes(':')) {
-                return timeValue;
+            try {
+                await loadSettings();
+                await loadBookings();
+                await loadBlockedDates();
+                renderCalendar();
+                console.log('✅ All data loaded successfully');
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showMessage('Erreur de chargement: ' + error.message, 'error');
             }
+        });
+        
+        async function loadSettings() {
+            console.log('📥 Loading settings...');
             
-            if (typeof timeValue === 'string' && timeValue.includes('1899')) {
-                try {
-                    const date = new Date(timeValue);
-                    const hours = String(date.getHours()).padStart(2, '0');
-                    const minutes = String(date.getMinutes()).padStart(2, '0');
-                    return `${hours}:${minutes}`;
-                } catch (e) {
+            try {
+                const response = await fetch(`${API_URL}?action=getSettings`);
+                if (!response.ok) throw new Error('Failed to load settings');
+                settings = await response.json();
+                console.log('✅ Settings loaded:', settings);
+                
+                // FIX: Zeit-Format korrigieren
+                function formatTime(timeValue) {
+                    if (!timeValue) return '';
+                    
+                    if (typeof timeValue === 'string' && timeValue.includes(':')) {
+                        return timeValue;
+                    }
+                    
+                    if (typeof timeValue === 'string' && timeValue.includes('1899')) {
+                        try {
+                            const date = new Date(timeValue);
+                            const hours = String(date.getHours()).padStart(2, '0');
+                            const minutes = String(date.getMinutes()).padStart(2, '0');
+                            return `${hours}:${minutes}`;
+                        } catch (e) {
+                            return timeValue;
+                        }
+                    }
+                    
                     return timeValue;
                 }
-            }
-            
-            return timeValue;
-        }
-        
-        // Update UI - Check-in/Check-out Zeiten
-        const checkInTime = formatTime(settings.checkInTime) || '15:00';
-        const checkOutTime = formatTime(settings.checkOutTime) || '11:00';
-        
-        const checkInElement = document.getElementById('checkInTime');
-        const checkOutElement = document.getElementById('checkOutTime');
-        const priceElement = document.getElementById('pricePerNight');
-        
-        if (checkInElement) {
-            checkInElement.textContent = checkInTime;
-        }
-        if (checkOutElement) {
-            checkOutElement.textContent = checkOutTime;
-        }
-        if (priceElement) {
-            priceElement.textContent = settings.pricePerNight || '89';
-        }
-        
-        // FIX: Populate guests dropdown
-        const maxGuests = parseInt(settings.maxGuests) || 4;
-        const select = document.getElementById('numGuests');
-        
-        if (select) {
-            console.log('Populating guests dropdown, max guests:', maxGuests);
-            
-            // Clear existing options
-            select.innerHTML = '';
-            
-            // Add placeholder
-            const placeholderOption = document.createElement('option');
-            placeholderOption.value = '';
-            placeholderOption.textContent = 'Sélectionnez...';
-            placeholderOption.disabled = true;
-            placeholderOption.selected = true;
-            select.appendChild(placeholderOption);
-            
-            // Add guest options
-            for (let i = 1; i <= maxGuests; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `${i} personne${i > 1 ? 's' : ''}`;
-                select.appendChild(option);
-                console.log(`Added option: ${i} personne${i > 1 ? 's' : ''}`);
-            }
-            
-            console.log('✅ Guests dropdown populated with', maxGuests, 'options');
-        } else {
-            console.error('❌ Element #numGuests not found!');
-        }
-        
-    } catch (error) {
-        console.error('❌ Error loading settings:', error);
-        
-        // Fallback: Populate with default values
-        const select = document.getElementById('numGuests');
-        if (select) {
-            select.innerHTML = '<option value="">Sélectionnez...</option>';
-            for (let i = 1; i <= 4; i++) {
-                select.innerHTML += `<option value="${i}">${i} personne${i > 1 ? 's' : ''}</option>`;
-            }
-        }
-        
-        throw error;
-    }
-}
-
-    
-    async function loadBookings() {
-        console.log('📥 Loading bookings...');
-        const response = await fetch(`${API_URL}?action=getBookings`);
-        if (!response.ok) throw new Error('Failed to load bookings');
-        const bookings = await response.json();
-        console.log('✅ Bookings loaded:', bookings.length);
-        
-        bookedDates = [];
-        bookings.forEach(booking => {
-            if (booking.status === 'confirmed') {
-                // FIX 2: Korrekte Datumsberechnung ohne Timezone-Problem
-                const arrivalParts = booking.arrivalDate.split('-');
-                const departureParts = booking.departureDate.split('-');
                 
-                const start = new Date(parseInt(arrivalParts[0]), parseInt(arrivalParts[1]) - 1, parseInt(arrivalParts[2]));
-                const end = new Date(parseInt(departureParts[0]), parseInt(departureParts[1]) - 1, parseInt(departureParts[2]));
+                // Update UI - Check-in/Check-out Zeiten
+                const checkInTime = formatTime(settings.checkInTime) || '15:00';
+                const checkOutTime = formatTime(settings.checkOutTime) || '11:00';
                 
-                for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-                    const year = d.getFullYear();
-                    const month = String(d.getMonth() + 1).padStart(2, '0');
-                    const day = String(d.getDate()).padStart(2, '0');
-                    bookedDates.push(`${year}-${month}-${day}`);
+                const checkInElement = document.getElementById('checkInTime');
+                const checkOutElement = document.getElementById('checkOutTime');
+                const priceElement = document.getElementById('pricePerNight');
+                
+                if (checkInElement) {
+                    checkInElement.textContent = checkInTime;
                 }
+                if (checkOutElement) {
+                    checkOutElement.textContent = checkOutTime;
+                }
+                if (priceElement) {
+                    priceElement.textContent = settings.pricePerNight || '89';
+                }
+                
+                // FIX: Populate guests dropdown
+                const maxGuests = parseInt(settings.maxGuests) || 4;
+                const select = document.getElementById('numGuests');
+                
+                if (select) {
+                    console.log('📋 Populating guests dropdown, max guests:', maxGuests);
+                    
+                    // Clear existing options
+                    select.innerHTML = '';
+                    
+                    // Add placeholder
+                    const placeholderOption = document.createElement('option');
+                    placeholderOption.value = '';
+                    placeholderOption.textContent = 'Sélectionnez...';
+                    placeholderOption.disabled = true;
+                    placeholderOption.selected = true;
+                    select.appendChild(placeholderOption);
+                    
+                    // Add guest options
+                    for (let i = 1; i <= maxGuests; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = `${i} personne${i > 1 ? 's' : ''}`;
+                        select.appendChild(option);
+                        console.log(`  ✓ Added option: ${i} personne${i > 1 ? 's' : ''}`);
+                    }
+                    
+                    console.log('✅ Guests dropdown populated with', maxGuests, 'options');
+                } else {
+                    console.error('❌ Element #numGuests not found!');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error loading settings:', error);
+                
+                // Fallback: Populate with default values
+                const select = document.getElementById('numGuests');
+                if (select) {
+                    console.log('⚠️ Using fallback values for guests dropdown');
+                    select.innerHTML = '<option value="" disabled selected>Sélectionnez...</option>';
+                    for (let i = 1; i <= 4; i++) {
+                        select.innerHTML += `<option value="${i}">${i} personne${i > 1 ? 's' : ''}</option>`;
+                    }
+                }
+                
+                throw error;
             }
-        });
-        console.log('📅 Booked dates:', bookedDates);
-    }
-    
-    async function loadBlockedDates() {
-        console.log('📥 Loading blocked dates...');
-        const response = await fetch(`${API_URL}?action=getBlocked`);
-        if (!response.ok) throw new Error('Failed to load blocked dates');
-        const blocked = await response.json();
-        console.log('✅ Blocked periods loaded:', blocked);
-        
-        blockedDates = [];
-        blocked.forEach(period => {
-            // FIX 1 & 2: Korrekte Datumsberechnung für blockierte Zeiträume
-            const startParts = period.startDate.split('-');
-            const endParts = period.endDate.split('-');
-            
-            const start = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
-            const end = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
-            
-            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-                const year = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
-                blockedDates.push(`${year}-${month}-${day}`);
-            }
-        });
-        console.log('🚫 Blocked dates:', blockedDates);
-    }
-    
-    function renderCalendar() {
-        const calendar = document.getElementById('calendar');
-        const monthYear = document.getElementById('calendarMonth');
-        
-        const year = currentMonth.getFullYear();
-        const month = currentMonth.getMonth();
-        
-        const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-                          'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-        
-        monthYear.textContent = `${monthNames[month]} ${year}`;
-        calendar.innerHTML = '';
-        
-        const dayHeaders = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-        dayHeaders.forEach(day => {
-            const header = document.createElement('div');
-            header.className = 'calendar-day-header';
-            header.textContent = day;
-            calendar.appendChild(header);
-        });
-        
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const startDay = firstDay === 0 ? 6 : firstDay - 1;
-        
-        for (let i = 0; i < startDay; i++) {
-            const emptyDay = document.createElement('div');
-            emptyDay.className = 'calendar-day empty';
-            calendar.appendChild(emptyDay);
         }
         
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        for (let day = 1; day <= daysInMonth; day++) {
-            const date = new Date(year, month, day);
+        async function loadBookings() {
+            console.log('📥 Loading bookings...');
             
-            // FIX 2: Korrekte Datumsstring-Erstellung
-            const dateYear = date.getFullYear();
-            const dateMonth = String(date.getMonth() + 1).padStart(2, '0');
-            const dateDay = String(date.getDate()).padStart(2, '0');
-            const dateStr = `${dateYear}-${dateMonth}-${dateDay}`;
-            
-            const dayElement = document.createElement('div');
-            dayElement.className = 'calendar-day';
-            dayElement.textContent = day;
-            dayElement.dataset.date = dateStr;
-            
-            // Prüfung in der richtigen Reihenfolge
-            if (date < today) {
-                // Vergangene Daten
-                dayElement.classList.add('blocked');
-            } else if (blockedDates.includes(dateStr)) {
-                // FIX 1: Blockierte Daten werden jetzt korrekt angezeigt
-                dayElement.classList.add('blocked');
-                console.log('Blocked date found:', dateStr);
-            } else if (bookedDates.includes(dateStr)) {
-                // Gebuchte Daten
-                dayElement.classList.add('booked');
-            } else {
-                // Verfügbare Daten
-                dayElement.classList.add('available');
-                dayElement.addEventListener('click', () => selectDate(dateStr));
+            try {
+                const response = await fetch(`${API_URL}?action=getBookings`);
+                if (!response.ok) throw new Error('Failed to load bookings');
+                const bookings = await response.json();
+                console.log('✅ Bookings loaded:', bookings.length);
+                
+                bookedDates = [];
+                bookings.forEach(booking => {
+                    if (booking.status === 'confirmed') {
+                        // FIX: Korrekte Datumsberechnung ohne Timezone-Problem
+                        const arrivalParts = booking.arrivalDate.split('-');
+                        const departureParts = booking.departureDate.split('-');
+                        
+                        const start = new Date(parseInt(arrivalParts[0]), parseInt(arrivalParts[1]) - 1, parseInt(arrivalParts[2]));
+                        const end = new Date(parseInt(departureParts[0]), parseInt(departureParts[1]) - 1, parseInt(departureParts[2]));
+                        
+                        for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+                            const year = d.getFullYear();
+                            const month = String(d.getMonth() + 1).padStart(2, '0');
+                            const day = String(d.getDate()).padStart(2, '0');
+                            bookedDates.push(`${year}-${month}-${day}`);
+                        }
+                    }
+                });
+                console.log('📅 Booked dates:', bookedDates.length);
+                
+            } catch (error) {
+                console.error('❌ Error loading bookings:', error);
+                bookedDates = [];
             }
-            
-            // Markierung für ausgewählte Daten
-            if (selectedStartDate && dateStr === selectedStartDate) {
-                dayElement.classList.add('selected');
-            }
-            if (selectedEndDate && dateStr === selectedEndDate) {
-                dayElement.classList.add('selected');
-            }
-            
-            // Markierung für Bereich zwischen Start und Ende
-            if (selectedStartDate && selectedEndDate) {
-                const selectedStart = new Date(selectedStartDate);
-                const selectedEnd = new Date(selectedEndDate);
-                if (date > selectedStart && date < selectedEnd) {
-                    dayElement.classList.add('in-range');
-                }
-            }
-            
-            calendar.appendChild(dayElement);
         }
-    }
-    
-    function selectDate(dateStr) {
-        console.log('📅 Date selected:', dateStr);
         
-        if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
-            // Neue Auswahl starten
-            selectedStartDate = dateStr;
-            selectedEndDate = null;
-            document.getElementById('arrivalDate').value = dateStr;
-            document.getElementById('departureDate').value = '';
-            document.getElementById('priceSummary').style.display = 'none';
-        } else {
-            // Auswahl abschließen
-            const start = new Date(selectedStartDate);
-            const end = new Date(dateStr);
+        async function loadBlockedDates() {
+            console.log('📥 Loading blocked dates...');
             
-            if (end <= start) {
-                // Wenn Ende vor Start liegt, neue Auswahl starten
+            try {
+                const response = await fetch(`${API_URL}?action=getBlocked`);
+                if (!response.ok) throw new Error('Failed to load blocked dates');
+                
+                const blocked = await response.json();
+                console.log('✅ Blocked periods received:', blocked.length);
+                
+                blockedDates = [];
+                
+                if (!blocked || blocked.length === 0) {
+                    console.log('⚠️ No blocked periods found');
+                    return;
+                }
+                
+                blocked.forEach((period, index) => {
+                    console.log(`Processing blocked period ${index + 1}:`, period);
+                    
+                    // Verschiedene Datumsformate unterstützen
+                    let startDate = period.startDate;
+                    let endDate = period.endDate;
+                    
+                    // Funktion zum Normalisieren des Datums
+                    function normalizeDate(dateStr) {
+                        if (!dateStr) return null;
+                        
+                        // Bereits im Format YYYY-MM-DD
+                        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                            return dateStr;
+                        }
+                        
+                        // Format: DD/MM/YYYY
+                        if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)) {
+                            const parts = dateStr.split('/');
+                            const day = parts[0].padStart(2, '0');
+                            const month = parts[1].padStart(2, '0');
+                            const year = parts[2];
+                            return `${year}-${month}-${day}`;
+                        }
+                        
+                        // Format: DD.MM.YYYY
+                        if (/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(dateStr)) {
+                            const parts = dateStr.split('.');
+                            const day = parts[0].padStart(2, '0');
+                            const month = parts[1].padStart(2, '0');
+                            const year = parts[2];
+                            return `${year}-${month}-${day}`;
+                        }
+                        
+                        // Versuche als ISO-Datum zu parsen
+                        try {
+                            const date = new Date(dateStr);
+                            if (!isNaN(date.getTime())) {
+                                const year = date.getFullYear();
+                                const month = String(date.getMonth() + 1).padStart(2, '0');
+                                const day = String(date.getDate()).padStart(2, '0');
+                                return `${year}-${month}-${day}`;
+                            }
+                        } catch (e) {
+                            console.error('Could not parse date:', dateStr);
+                        }
+                        
+                        return null;
+                    }
+                    
+                    startDate = normalizeDate(startDate);
+                    endDate = normalizeDate(endDate);
+                    
+                    console.log(`  Normalized: ${period.startDate} → ${startDate}`);
+                    console.log(`  Normalized: ${period.endDate} → ${endDate}`);
+                    
+                    if (!startDate || !endDate) {
+                        console.error('⚠️ Could not normalize dates for period:', period);
+                        return;
+                    }
+                    
+                    // Alle Daten zwischen Start und Ende hinzufügen
+                    const startParts = startDate.split('-');
+                    const endParts = endDate.split('-');
+                    
+                    const start = new Date(
+                        parseInt(startParts[0]), 
+                        parseInt(startParts[1]) - 1, 
+                        parseInt(startParts[2])
+                    );
+                    
+                    const end = new Date(
+                        parseInt(endParts[0]), 
+                        parseInt(endParts[1]) - 1, 
+                        parseInt(endParts[2])
+                    );
+                    
+                    console.log(`  Date range: ${start.toDateString()} to ${end.toDateString()}`);
+                    
+                    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                        const year = d.getFullYear();
+                        const month = String(d.getMonth() + 1).padStart(2, '0');
+                        const day = String(d.getDate()).padStart(2, '0');
+                        const dateStr = `${year}-${month}-${day}`;
+                        
+                        blockedDates.push(dateStr);
+                        console.log(`    ✓ Added blocked date: ${dateStr}`);
+                    }
+                });
+                
+                console.log('🚫 Total blocked dates:', blockedDates.length);
+                console.log('🚫 Blocked dates array:', blockedDates);
+                
+            } catch (error) {
+                console.error('❌ Error loading blocked dates:', error);
+                blockedDates = [];
+            }
+        }
+        
+        function renderCalendar() {
+            const calendar = document.getElementById('calendar');
+            const monthYear = document.getElementById('calendarMonth');
+            
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+            
+            const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                              'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+            
+            monthYear.textContent = `${monthNames[month]} ${year}`;
+            calendar.innerHTML = '';
+            
+            const dayHeaders = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                calendar.appendChild(header);
+            });
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const startDay = firstDay === 0 ? 6 : firstDay - 1;
+            
+            for (let i = 0; i < startDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendar.appendChild(emptyDay);
+            }
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                
+                // FIX: Korrekte Datumsstring-Erstellung
+                const dateYear = date.getFullYear();
+                const dateMonth = String(date.getMonth() + 1).padStart(2, '0');
+                const dateDay = String(date.getDate()).padStart(2, '0');
+                const dateStr = `${dateYear}-${dateMonth}-${dateDay}`;
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                dayElement.dataset.date = dateStr;
+                
+                // WICHTIG: Prüfung in der richtigen Reihenfolge
+                // Zuerst prüfen ob blockiert oder gebucht (nicht klickbar)
+                // Dann erst selected/in-range Styling hinzufügen
+                
+                let isClickable = true;
+                
+                if (date < today) {
+                    // Vergangene Daten
+                    dayElement.classList.add('blocked');
+                    isClickable = false;
+                } else if (blockedDates.includes(dateStr)) {
+                    // FIX: Blockierte Daten - WICHTIG: Diese haben Priorität!
+                    dayElement.classList.add('blocked');
+                    isClickable = false;
+                    console.log('🚫 Rendering blocked date:', dateStr);
+                } else if (bookedDates.includes(dateStr)) {
+                    // Gebuchte Daten
+                    dayElement.classList.add('booked');
+                    isClickable = false;
+                } else {
+                    // Verfügbare Daten
+                    dayElement.classList.add('available');
+                }
+                
+                // Nur bei verfügbaren Daten: Click-Handler und Selection-Styling
+                if (isClickable) {
+                    dayElement.addEventListener('click', () => selectDate(dateStr));
+                    
+                    // Markierung für ausgewählte Daten
+                    if (selectedStartDate && dateStr === selectedStartDate) {
+                        dayElement.classList.add('selected');
+                    }
+                    if (selectedEndDate && dateStr === selectedEndDate) {
+                        dayElement.classList.add('selected');
+                    }
+                    
+                    // Markierung für Bereich zwischen Start und Ende
+                    if (selectedStartDate && selectedEndDate) {
+                        const selectedStart = new Date(selectedStartDate);
+                        const selectedEnd = new Date(selectedEndDate);
+                        if (date > selectedStart && date < selectedEnd) {
+                            dayElement.classList.add('in-range');
+                        }
+                    }
+                }
+                
+                calendar.appendChild(dayElement);
+            }
+            
+            console.log('📅 Calendar rendered for', monthNames[month], year);
+        }
+        
+        function selectDate(dateStr) {
+            console.log('📅 Date selected:', dateStr);
+            
+            if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+                // Neue Auswahl starten
                 selectedStartDate = dateStr;
                 selectedEndDate = null;
                 document.getElementById('arrivalDate').value = dateStr;
                 document.getElementById('departureDate').value = '';
+                document.getElementById('priceSummary').style.display = 'none';
             } else {
-                // Prüfen ob Bereich gültig ist
-                let isValid = true;
-                const startParts = selectedStartDate.split('-');
-                const endParts = dateStr.split('-');
+                // Auswahl abschließen
+                const start = new Date(selectedStartDate);
+                const end = new Date(dateStr);
                 
-                const checkStart = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
-                const checkEnd = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
-                
-                for (let d = new Date(checkStart); d < checkEnd; d.setDate(d.getDate() + 1)) {
-                    const year = d.getFullYear();
-                    const month = String(d.getMonth() + 1).padStart(2, '0');
-                    const day = String(d.getDate()).padStart(2, '0');
-                    const checkDate = `${year}-${month}-${day}`;
-                    
-                    if (bookedDates.includes(checkDate) || blockedDates.includes(checkDate)) {
-                        isValid = false;
-                        console.log('Invalid date in range:', checkDate);
-                        break;
-                    }
-                }
-                
-                if (isValid) {
-                    selectedEndDate = dateStr;
-                    document.getElementById('departureDate').value = dateStr;
-                    calculatePrice();
-                } else {
-                    showMessage('Cette période contient des dates déjà réservées ou bloquées.', 'error');
+                if (end <= start) {
+                    // Wenn Ende vor Start liegt, neue Auswahl starten
                     selectedStartDate = dateStr;
                     selectedEndDate = null;
                     document.getElementById('arrivalDate').value = dateStr;
                     document.getElementById('departureDate').value = '';
+                } else {
+                    // Prüfen ob Bereich gültig ist
+                    let isValid = true;
+                    const startParts = selectedStartDate.split('-');
+                    const endParts = dateStr.split('-');
+                    
+                    const checkStart = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
+                    const checkEnd = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
+                    
+                    for (let d = new Date(checkStart); d < checkEnd; d.setDate(d.getDate() + 1)) {
+                        const year = d.getFullYear();
+                        const month = String(d.getMonth() + 1).padStart(2, '0');
+                        const day = String(d.getDate()).padStart(2, '0');
+                        const checkDate = `${year}-${month}-${day}`;
+                        
+                        if (bookedDates.includes(checkDate) || blockedDates.includes(checkDate)) {
+                            isValid = false;
+                            console.log('Invalid date in range:', checkDate);
+                            break;
+                        }
+                    }
+                    
+                    if (isValid) {
+                        selectedEndDate = dateStr;
+                        document.getElementById('departureDate').value = dateStr;
+                        calculatePrice();
+                    } else {
+                        showMessage('Cette période contient des dates déjà réservées ou bloquées.', 'error');
+                        selectedStartDate = dateStr;
+                        selectedEndDate = null;
+                        document.getElementById('arrivalDate').value = dateStr;
+                        document.getElementById('departureDate').value = '';
+                    }
                 }
             }
-        }
-        
-        renderCalendar();
-    }
-    
-    function calculatePrice() {
-        if (!selectedStartDate || !selectedEndDate) {
-            document.getElementById('priceSummary').style.display = 'none';
-            return;
-        }
-        
-        // FIX 2: Korrekte Nächte-Berechnung
-        const startParts = selectedStartDate.split('-');
-        const endParts = selectedEndDate.split('-');
-        
-        const start = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
-        const end = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
-        
-        const nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
-        
-        console.log('Calculating price:', {
-            start: selectedStartDate,
-            end: selectedEndDate,
-            nights: nights
-        });
-        
-        const minNights = parseInt(settings.minNights) || 2;
-        if (nights < minNights) {
-            showMessage(`Le séjour minimum est de ${minNights} nuit(s).`, 'error');
-            selectedEndDate = null;
-            document.getElementById('departureDate').value = '';
+            
             renderCalendar();
-            return;
         }
         
-        const pricePerNight = parseFloat(settings.pricePerNight) || 89;
-        let subtotal = nights * pricePerNight;
-        let discount = 0;
-        let discountPercent = 0;
-        
-        if (nights >= 14 && settings.discount14nights) {
-            discountPercent = parseFloat(settings.discount14nights);
-            discount = subtotal * (discountPercent / 100);
-        } else if (nights >= 7 && settings.discount7nights) {
-            discountPercent = parseFloat(settings.discount7nights);
-            discount = subtotal * (discountPercent / 100);
-        }
-        
-        const total = subtotal - discount;
-        
-        document.getElementById('priceNights').textContent = nights;
-        document.getElementById('subtotal').textContent = subtotal.toFixed(0) + '€';
-        
-        if (discount > 0) {
-            document.getElementById('discountRow').style.display = 'flex';
-            document.getElementById('discountBadge').textContent = `-${discountPercent}%`;
-            document.getElementById('discountAmount').textContent = `-${discount.toFixed(0)}€`;
-        } else {
-            document.getElementById('discountRow').style.display = 'none';
-        }
-        
-        document.getElementById('totalPrice').textContent = total.toFixed(0) + '€';
-        document.getElementById('priceSummary').style.display = 'block';
-    }
-    
-    function previousMonth() {
-        currentMonth.setMonth(currentMonth.getMonth() - 1);
-        renderCalendar();
-    }
-    
-    function nextMonth() {
-        currentMonth.setMonth(currentMonth.getMonth() + 1);
-        renderCalendar();
-    }
-    
-    document.getElementById('bookingForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        if (!selectedStartDate || !selectedEndDate) {
-            showMessage('Veuillez sélectionner vos dates.', 'error');
-            return;
-        }
-        
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Envoi en cours...';
-        
-        // FIX 2: Korrekte Nächte-Berechnung
-        const startParts = selectedStartDate.split('-');
-        const endParts = selectedEndDate.split('-');
-        
-        const start = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
-        const end = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
-        
-        const nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
-        
-        const pricePerNight = parseFloat(settings.pricePerNight) || 89;
-        let subtotal = nights * pricePerNight;
-        let discount = 0;
-        
-        if (nights >= 14 && settings.discount14nights) {
-            discount = subtotal * (parseFloat(settings.discount14nights) / 100);
-        } else if (nights >= 7 && settings.discount7nights) {
-            discount = subtotal * (parseFloat(settings.discount7nights) / 100);
-        }
-        
-        const total = subtotal - discount;
-        
-        const bookingData = {
-            action: 'createBooking',
-            guestName: document.getElementById('guestName').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            numGuests: parseInt(document.getElementById('numGuests').value),
-            arrivalDate: selectedStartDate,
-            departureDate: selectedEndDate,
-            numNights: nights,
-            totalPrice: total.toFixed(0),
-            specialRequests: document.getElementById('specialRequests').value
-        };
-        
-        console.log('📤 Sending booking:', bookingData);
-        
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify(bookingData)
+        function calculatePrice() {
+            if (!selectedStartDate || !selectedEndDate) {
+                document.getElementById('priceSummary').style.display = 'none';
+                return;
+            }
+            
+            // FIX: Korrekte Nächte-Berechnung
+            const startParts = selectedStartDate.split('-');
+            const endParts = selectedEndDate.split('-');
+            
+            const start = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
+            const end = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
+            
+            const nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
+            
+            console.log('Calculating price:', {
+                start: selectedStartDate,
+                end: selectedEndDate,
+                nights: nights
             });
             
-            const result = await response.json();
-            console.log('📥 Response:', result);
-            
-            if (result.success) {
-                showMessage('Votre demande a été envoyée avec succès ! Vous recevrez une confirmation par email.', 'success');
-                document.getElementById('bookingForm').reset();
-                selectedStartDate = null;
+            const minNights = parseInt(settings.minNights) || 2;
+            if (nights < minNights) {
+                showMessage(`Le séjour minimum est de ${minNights} nuit(s).`, 'error');
                 selectedEndDate = null;
-                document.getElementById('priceSummary').style.display = 'none';
-                await loadBookings();
+                document.getElementById('departureDate').value = '';
                 renderCalendar();
-            } else {
-                showMessage('Une erreur est survenue. Veuillez réessayer.', 'error');
+                return;
             }
-        } catch (error) {
-            console.error('❌ Booking error:', error);
-            showMessage('Erreur: ' + error.message, 'error');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Envoyer la demande';
+            
+            const pricePerNight = parseFloat(settings.pricePerNight) || 89;
+            let subtotal = nights * pricePerNight;
+            let discount = 0;
+            let discountPercent = 0;
+            
+            if (nights >= 14 && settings.discount14nights) {
+                discountPercent = parseFloat(settings.discount14nights);
+                discount = subtotal * (discountPercent / 100);
+            } else if (nights >= 7 && settings.discount7nights) {
+                discountPercent = parseFloat(settings.discount7nights);
+                discount = subtotal * (discountPercent / 100);
+            }
+            
+            const total = subtotal - discount;
+            
+            document.getElementById('priceNights').textContent = nights;
+            document.getElementById('subtotal').textContent = subtotal.toFixed(0) + '€';
+            
+            if (discount > 0) {
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('discountBadge').textContent = `-${discountPercent}%`;
+                document.getElementById('discountAmount').textContent = `-${discount.toFixed(0)}€`;
+            } else {
+                document.getElementById('discountRow').style.display = 'none';
+            }
+            
+            document.getElementById('totalPrice').textContent = total.toFixed(0) + '€';
+            document.getElementById('priceSummary').style.display = 'block';
         }
-    });
-    
-    function showMessage(text, type) {
-        const messageBox = document.getElementById('messageBox');
-        messageBox.textContent = text;
-        messageBox.className = `message ${type}`;
-        messageBox.style.display = 'block';
         
-        setTimeout(() => {
-            messageBox.style.display = 'none';
-        }, 5000);
+        function previousMonth() {
+            currentMonth.setMonth(currentMonth.getMonth() - 1);
+            renderCalendar();
+        }
         
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
-    console.log('✅ Script loaded');
-</script>
-
+        function nextMonth() {
+            currentMonth.setMonth(currentMonth.getMonth() + 1);
+            renderCalendar();
+        }
+        
+        document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!selectedStartDate || !selectedEndDate) {
+                showMessage('Veuillez sélectionner vos dates.', 'error');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Envoi en cours...';
+            
+            // FIX: Korrekte Nächte-Berechnung
+            const startParts = selectedStartDate.split('-');
+            const endParts = selectedEndDate.split('-');
+            
+            const start = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
+            const end = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
+            
+            const nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
+            
+            const pricePerNight = parseFloat(settings.pricePerNight) || 89;
+            let subtotal = nights * pricePerNight;
+            let discount = 0;
+            
+            if (nights >= 14 && settings.discount14nights) {
+                discount = subtotal * (parseFloat(settings.discount14nights) / 100);
+            } else if (nights >= 7 && settings.discount7nights) {
+                discount = subtotal * (parseFloat(settings.discount7nights) / 100);
+            }
+            
+            const total = subtotal - discount;
+            
+            const bookingData = {
+                action: 'createBooking',
+                guestName: document.getElementById('guestName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                numGuests: parseInt(document.getElementById('numGuests').value),
+                arrivalDate: selectedStartDate,
+                departureDate: selectedEndDate,
+                numNights: nights,
+                totalPrice: total.toFixed(0),
+                specialRequests: document.getElementById('specialRequests').value
+            };
+            
+            console.log('📤 Sending booking:', bookingData);
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(bookingData)
+                });
+                
+                const result = await response.json();
+                console.log('📥 Response:', result);
+                
+                if (result.success) {
+                    showMessage('Votre demande a été envoyée avec succès ! Vous recevrez une confirmation par email.', 'success');
+                    document.getElementById('bookingForm').reset();
+                    selectedStartDate = null;
+                    selectedEndDate = null;
+                    document.getElementById('priceSummary').style.display = 'none';
+                    await loadBookings();
+                    renderCalendar();
+                } else {
+                    showMessage('Une erreur est survenue. Veuillez réessayer.', 'error');
+                }
+            } catch (error) {
+                console.error('❌ Booking error:', error);
+                showMessage('Erreur: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Envoyer la demande';
+            }
+        });
+        
+        function showMessage(text, type) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = text;
+            messageBox.className = `message ${type}`;
+            messageBox.style.display = 'block';
+            
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 5000);
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        console.log('✅ Script loaded');
+    </script>
 </body>
 </html>
