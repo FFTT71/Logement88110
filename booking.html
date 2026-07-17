@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appartement Lac Léman - Réservation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .gallery-main {
+            grid-column: 1 / -1;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: white;
+        }
+        
+        .gallery-thumb {
+            height: 150px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+        }
+        
+        .calendar-container {
+            margin: 20px 0;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-nav {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .calendar-nav:hover {
+            background: #5568d3;
+        }
+        
+        .calendar-month {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .calendar-day.empty {
+            cursor: default;
+        }
+        
+        .calendar-day.available {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .calendar-day.available:hover {
+            background: #c8e6c9;
+            transform: scale(1.1);
+        }
+        
+        .calendar-day.booked {
+            background: #ffebee;
+            color: #c62828;
+            cursor: not-allowed;
+        }
+        
+        .calendar-day.blocked {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .calendar-day.selected {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .calendar-day.in-range {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .calendar-legend {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .price-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .price-row.total {
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .discount-badge {
+            background: #4caf50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .info-box h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+        }
+        
+        .info-box ul li {
+            margin: 5px 0;
+        }
+        
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏠 Appartement Lac Léman</h1>
+        <p>Évian-les-Bains, France</p>
+    </div>
+    
+    <div class="container">
+        <div id="messageBox" class="message"></div>
+        
+        <div class="main-grid">
+            <div>
+                <div class="card">
+                    <h2>📸 Photos</h2>
+                    <div class="gallery">
+                        <div class="gallery-main">🏠</div>
+                        <div class="gallery-thumb">🛏️</div>
+                        <div class="gallery-thumb">🍳</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>📝 Description</h2>
+                    <p style="line-height: 1.6; color: #555;">
+                        Magnifique appartement situé au cœur d'Évian-les-Bains, à quelques pas du lac Léman. 
+                        Idéal pour des vacances en famille ou entre amis.
+                    </p>
+                    
+                    <h3 style="margin-top: 20px; margin-bottom: 15px; color: #667eea;">✨ Équipements</h3>
+                    <div class="features">
+                        <div class="feature-item">
+                            <span class="feature-icon">📶</span>
+                            <span>WiFi gratuit</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🍳</span>
+                            <span>Cuisine équipée</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🧺</span>
+                            <span>Lave-linge</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🅿️</span>
+                            <span>Parking gratuit</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🌅</span>
+                            <span>Balcon</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📺</span>
+                            <span>TV écran plat</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>📋 Règlement intérieur</h2>
+                    <div class="info-box">
+                        <h4>Horaires</h4>
+                        <ul>
+                            <li>Check-in : à partir de <strong><span id="checkInTime">15:00</span></strong></li>
+                            <li>Check-out : jusqu'à <strong><span id="checkOutTime">11:00</span></strong></li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <h4>Règles</h4>
+                        <ul>
+                            <li>🚭 Non-fumeur</li>
+                            <li>🐕 Animaux non acceptés</li>
+                            <li>🎉 Pas de fêtes</li>
+                            <li>🤫 Calme après 22h00</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>📍 Emplacement</h2>
+                    <p style="line-height: 1.6; color: #555; margin-bottom: 15px;">
+                        <strong>Adresse :</strong> Évian-les-Bains, Haute-Savoie, France
+                    </p>
+                    <div class="info-box">
+                        <h4>Comment s'y rendre</h4>
+                        <ul>
+                            <li>🚗 En voiture : Autoroute A40, sortie Évian</li>
+                            <li>🚂 En train : Gare d'Évian-les-Bains (10 min à pied)</li>
+                            <li>✈️ Aéroport : Genève (45 km)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="card">
+                    <h2>📅 Disponibilités</h2>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" onclick="previousMonth()">◀</button>
+                            <div class="calendar-month" id="calendarMonth"></div>
+                            <button class="calendar-nav" onclick="nextMonth()">▶</button>
+                        </div>
+                        <div class="calendar" id="calendar"></div>
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #e8f5e9;"></div>
+                                <span>Disponible</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #ffebee;"></div>
+                                <span>Réservé</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #667eea;"></div>
+                                <span>Sélectionné</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>✉️ Demande de réservation</h2>
+                    
+                    <form id="bookingForm">
+                        <div class="form-group">
+                            <label for="guestName">Nom complet *</label>
+                            <input type="text" id="guestName" required placeholder="Jean Dupont">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" required placeholder="jean.dupont@example.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Téléphone</label>
+                            <input type="tel" id="phone" placeholder="+33 6 12 34 56 78">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="arrivalDate">Date d'arrivée *</label>
+                                <input type="date" id="arrivalDate" required readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="departureDate">Date de départ *</label>
+                                <input type="date" id="departureDate" required readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="numGuests">Nombre de personnes *</label>
+                            <select id="numGuests" required>
+                                <option value="">Sélectionnez...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="specialRequests">Demandes spéciales</label>
+                            <textarea id="specialRequests" placeholder="Avez-vous des demandes particulières ?"></textarea>
+                        </div>
+                        
+                        <div class="price-summary" id="priceSummary" style="display: none;">
+                            <div class="price-row">
+                                <span><span id="priceNights">0</span> nuit(s) × <span id="pricePerNight">89</span>€</span>
+                                <span id="subtotal">0€</span>
+                            </div>
+                            <div class="price-row" id="discountRow" style="display: none;">
+                                <span>Réduction <span class="discount-badge" id="discountBadge"></span></span>
+                                <span id="discountAmount">0€</span>
+                            </div>
+                            <div class="price-row total">
+                                <span>Total</span>
+                                <span id="totalPrice">0€</span>
+                            </div>
+                        </div>
+                        
+                        <div class="info-box">
+                            <p style="font-size: 14px;">
+                                💳 <strong>Paiement :</strong> Virement bancaire ou espèces à l'arrivée<br>
+                                ✉️ Vous recevrez une confirmation par email
+                            </p>
+                        </div>
+                        
+                        <button type="submit" class="btn" id="submitBtn">
+                            Envoyer la demande
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2024 Appartement Lac Léman - Tous droits réservés</p>
+    </div>
+    
+    <script>
+    // WICHTIG: Ihre Google Apps Script URL hier einfügen!
+    const API_URL = 'https://script.google.com/macros/s/AKfyczx8ZZd17DX9rb1kqhXdUZjQD82uH6GQpY-tsPclwRVeMq5j8C/exec';
+    
+    let settings = {};
+    let bookedDates = [];
+    let blockedDates = [];
+    let currentMonth = new Date();
+    let selectedStartDate = null;
+    let selectedEndDate = null;
+    
+    console.log('🚀 Booking system starting...');
+    console.log('📡 API URL:', API_URL);
+    
+    window.addEventListener('DOMContentLoaded', async function() {
+        console.log('✅ DOM loaded');
+        
+        try {
+            await loadSettings();
+            await loadBookings();
+            await loadBlockedDates();
+            renderCalendar();
+            console.log('✅ All data loaded successfully');
+        } catch (error) {
+            console.error('❌ Error:', error);
+            showMessage('Erreur de chargement: ' + error.message, 'error');
+        }
+    });
+    
+    async function loadSettings() {
+        console.log('📥 Loading settings...');
+        const response = await fetch(`${API_URL}?action=getSettings`);
+        if (!response.ok) throw new Error('Failed to load settings');
+        settings = await response.json();
+        console.log('✅ Settings loaded:', settings);
+        
+        // FIX 3: Zeit-Format korrigieren
+        function formatTime(timeValue) {
+            if (!timeValue) return '';
+            
+            // Wenn es bereits im Format HH:MM ist
+            if (typeof timeValue === 'string' && timeValue.includes(':')) {
+                return timeValue;
+            }
+            
+            // Wenn es ein Timestamp ist
+            if (typeof timeValue === 'string' && timeValue.includes('1899')) {
+                try {
+                    const date = new Date(timeValue);
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    return `${hours}:${minutes}`;
+                } catch (e) {
+                    return timeValue;
+                }
+            }
+            
+            return timeValue;
+        }
+        
+        // Update UI
+        const checkInTime = formatTime(settings.checkInTime) || '15:00';
+        const checkOutTime = formatTime(settings.checkOutTime) || '11:00';
+        
+        if (document.getElementById('checkInTime')) {
+            document.getElementById('checkInTime').textContent = checkInTime;
+        }
+        if (document.getElementById('checkOutTime')) {
+            document.getElementById('checkOutTime').textContent = checkOutTime;
+        }
+        if (document.getElementById('pricePerNight')) {
+            document.getElementById('pricePerNight').textContent = settings.pricePerNight || '89';
+        }
+        
+        // Populate guests dropdown
+        const maxGuests = settings.maxGuests || 4;
+        const select = document.getElementById('numGuests');
+        if (select) {
+            select.innerHTML = '<option value="">Sélectionnez...</option>';
+            for (let i = 1; i <= maxGuests; i++) {
+                select.innerHTML += `<option value="${i}">${i} personne${i > 1 ? 's' : ''}</option>`;
+            }
+        }
+    }
+    
+    async function loadBookings() {
+        console.log('📥 Loading bookings...');
+        const response = await fetch(`${API_URL}?action=getBookings`);
+        if (!response.ok) throw new Error('Failed to load bookings');
+        const bookings = await response.json();
+        console.log('✅ Bookings loaded:', bookings.length);
+        
+        bookedDates = [];
+        bookings.forEach(booking => {
+            if (booking.status === 'confirmed') {
+                // FIX 2: Korrekte Datumsberechnung ohne Timezone-Problem
+                const arrivalParts = booking.arrivalDate.split('-');
+                const departureParts = booking.departureDate.split('-');
+                
+                const start = new Date(parseInt(arrivalParts[0]), parseInt(arrivalParts[1]) - 1, parseInt(arrivalParts[2]));
+                const end = new Date(parseInt(departureParts[0]), parseInt(departureParts[1]) - 1, parseInt(departureParts[2]));
+                
+                for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    bookedDates.push(`${year}-${month}-${day}`);
+                }
+            }
+        });
+        console.log('📅 Booked dates:', bookedDates);
+    }
+    
+    async function loadBlockedDates() {
+        console.log('📥 Loading blocked dates...');
+        const response = await fetch(`${API_URL}?action=getBlocked`);
+        if (!response.ok) throw new Error('Failed to load blocked dates');
+        const blocked = await response.json();
+        console.log('✅ Blocked periods loaded:', blocked);
+        
+        blockedDates = [];
+        blocked.forEach(period => {
+            // FIX 1 & 2: Korrekte Datumsberechnung für blockierte Zeiträume
+            const startParts = period.startDate.split('-');
+            const endParts = period.endDate.split('-');
+            
+            const start = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
+            const end = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
+            
+            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                blockedDates.push(`${year}-${month}-${day}`);
+            }
+        });
+        console.log('🚫 Blocked dates:', blockedDates);
+    }
+    
+    function renderCalendar() {
+        const calendar = document.getElementById('calendar');
+        const monthYear = document.getElementById('calendarMonth');
+        
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+        
+        const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                          'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+        
+        monthYear.textContent = `${monthNames[month]} ${year}`;
+        calendar.innerHTML = '';
+        
+        const dayHeaders = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+        dayHeaders.forEach(day => {
+            const header = document.createElement('div');
+            header.className = 'calendar-day-header';
+            header.textContent = day;
+            calendar.appendChild(header);
+        });
+        
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const startDay = firstDay === 0 ? 6 : firstDay - 1;
+        
+        for (let i = 0; i < startDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'calendar-day empty';
+            calendar.appendChild(emptyDay);
+        }
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day);
+            
+            // FIX 2: Korrekte Datumsstring-Erstellung
+            const dateYear = date.getFullYear();
+            const dateMonth = String(date.getMonth() + 1).padStart(2, '0');
+            const dateDay = String(date.getDate()).padStart(2, '0');
+            const dateStr = `${dateYear}-${dateMonth}-${dateDay}`;
+            
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            dayElement.textContent = day;
+            dayElement.dataset.date = dateStr;
+            
+            // Prüfung in der richtigen Reihenfolge
+            if (date < today) {
+                // Vergangene Daten
+                dayElement.classList.add('blocked');
+            } else if (blockedDates.includes(dateStr)) {
+                // FIX 1: Blockierte Daten werden jetzt korrekt angezeigt
+                dayElement.classList.add('blocked');
+                console.log('Blocked date found:', dateStr);
+            } else if (bookedDates.includes(dateStr)) {
+                // Gebuchte Daten
+                dayElement.classList.add('booked');
+            } else {
+                // Verfügbare Daten
+                dayElement.classList.add('available');
+                dayElement.addEventListener('click', () => selectDate(dateStr));
+            }
+            
+            // Markierung für ausgewählte Daten
+            if (selectedStartDate && dateStr === selectedStartDate) {
+                dayElement.classList.add('selected');
+            }
+            if (selectedEndDate && dateStr === selectedEndDate) {
+                dayElement.classList.add('selected');
+            }
+            
+            // Markierung für Bereich zwischen Start und Ende
+            if (selectedStartDate && selectedEndDate) {
+                const selectedStart = new Date(selectedStartDate);
+                const selectedEnd = new Date(selectedEndDate);
+                if (date > selectedStart && date < selectedEnd) {
+                    dayElement.classList.add('in-range');
+                }
+            }
+            
+            calendar.appendChild(dayElement);
+        }
+    }
+    
+    function selectDate(dateStr) {
+        console.log('📅 Date selected:', dateStr);
+        
+        if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+            // Neue Auswahl starten
+            selectedStartDate = dateStr;
+            selectedEndDate = null;
+            document.getElementById('arrivalDate').value = dateStr;
+            document.getElementById('departureDate').value = '';
+            document.getElementById('priceSummary').style.display = 'none';
+        } else {
+            // Auswahl abschließen
+            const start = new Date(selectedStartDate);
+            const end = new Date(dateStr);
+            
+            if (end <= start) {
+                // Wenn Ende vor Start liegt, neue Auswahl starten
+                selectedStartDate = dateStr;
+                selectedEndDate = null;
+                document.getElementById('arrivalDate').value = dateStr;
+                document.getElementById('departureDate').value = '';
+            } else {
+                // Prüfen ob Bereich gültig ist
+                let isValid = true;
+                const startParts = selectedStartDate.split('-');
+                const endParts = dateStr.split('-');
+                
+                const checkStart = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
+                const checkEnd = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
+                
+                for (let d = new Date(checkStart); d < checkEnd; d.setDate(d.getDate() + 1)) {
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const checkDate = `${year}-${month}-${day}`;
+                    
+                    if (bookedDates.includes(checkDate) || blockedDates.includes(checkDate)) {
+                        isValid = false;
+                        console.log('Invalid date in range:', checkDate);
+                        break;
+                    }
+                }
+                
+                if (isValid) {
+                    selectedEndDate = dateStr;
+                    document.getElementById('departureDate').value = dateStr;
+                    calculatePrice();
+                } else {
+                    showMessage('Cette période contient des dates déjà réservées ou bloquées.', 'error');
+                    selectedStartDate = dateStr;
+                    selectedEndDate = null;
+                    document.getElementById('arrivalDate').value = dateStr;
+                    document.getElementById('departureDate').value = '';
+                }
+            }
+        }
+        
+        renderCalendar();
+    }
+    
+    function calculatePrice() {
+        if (!selectedStartDate || !selectedEndDate) {
+            document.getElementById('priceSummary').style.display = 'none';
+            return;
+        }
+        
+        // FIX 2: Korrekte Nächte-Berechnung
+        const startParts = selectedStartDate.split('-');
+        const endParts = selectedEndDate.split('-');
+        
+        const start = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
+        const end = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
+        
+        const nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
+        
+        console.log('Calculating price:', {
+            start: selectedStartDate,
+            end: selectedEndDate,
+            nights: nights
+        });
+        
+        const minNights = parseInt(settings.minNights) || 2;
+        if (nights < minNights) {
+            showMessage(`Le séjour minimum est de ${minNights} nuit(s).`, 'error');
+            selectedEndDate = null;
+            document.getElementById('departureDate').value = '';
+            renderCalendar();
+            return;
+        }
+        
+        const pricePerNight = parseFloat(settings.pricePerNight) || 89;
+        let subtotal = nights * pricePerNight;
+        let discount = 0;
+        let discountPercent = 0;
+        
+        if (nights >= 14 && settings.discount14nights) {
+            discountPercent = parseFloat(settings.discount14nights);
+            discount = subtotal * (discountPercent / 100);
+        } else if (nights >= 7 && settings.discount7nights) {
+            discountPercent = parseFloat(settings.discount7nights);
+            discount = subtotal * (discountPercent / 100);
+        }
+        
+        const total = subtotal - discount;
+        
+        document.getElementById('priceNights').textContent = nights;
+        document.getElementById('subtotal').textContent = subtotal.toFixed(0) + '€';
+        
+        if (discount > 0) {
+            document.getElementById('discountRow').style.display = 'flex';
+            document.getElementById('discountBadge').textContent = `-${discountPercent}%`;
+            document.getElementById('discountAmount').textContent = `-${discount.toFixed(0)}€`;
+        } else {
+            document.getElementById('discountRow').style.display = 'none';
+        }
+        
+        document.getElementById('totalPrice').textContent = total.toFixed(0) + '€';
+        document.getElementById('priceSummary').style.display = 'block';
+    }
+    
+    function previousMonth() {
+        currentMonth.setMonth(currentMonth.getMonth() - 1);
+        renderCalendar();
+    }
+    
+    function nextMonth() {
+        currentMonth.setMonth(currentMonth.getMonth() + 1);
+        renderCalendar();
+    }
+    
+    document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (!selectedStartDate || !selectedEndDate) {
+            showMessage('Veuillez sélectionner vos dates.', 'error');
+            return;
+        }
+        
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Envoi en cours...';
+        
+        // FIX 2: Korrekte Nächte-Berechnung
+        const startParts = selectedStartDate.split('-');
+        const endParts = selectedEndDate.split('-');
+        
+        const start = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
+        const end = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
+        
+        const nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
+        
+        const pricePerNight = parseFloat(settings.pricePerNight) || 89;
+        let subtotal = nights * pricePerNight;
+        let discount = 0;
+        
+        if (nights >= 14 && settings.discount14nights) {
+            discount = subtotal * (parseFloat(settings.discount14nights) / 100);
+        } else if (nights >= 7 && settings.discount7nights) {
+            discount = subtotal * (parseFloat(settings.discount7nights) / 100);
+        }
+        
+        const total = subtotal - discount;
+        
+        const bookingData = {
+            action: 'createBooking',
+            guestName: document.getElementById('guestName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            numGuests: parseInt(document.getElementById('numGuests').value),
+            arrivalDate: selectedStartDate,
+            departureDate: selectedEndDate,
+            numNights: nights,
+            totalPrice: total.toFixed(0),
+            specialRequests: document.getElementById('specialRequests').value
+        };
+        
+        console.log('📤 Sending booking:', bookingData);
+        
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify(bookingData)
+            });
+            
+            const result = await response.json();
+            console.log('📥 Response:', result);
+            
+            if (result.success) {
+                showMessage('Votre demande a été envoyée avec succès ! Vous recevrez une confirmation par email.', 'success');
+                document.getElementById('bookingForm').reset();
+                selectedStartDate = null;
+                selectedEndDate = null;
+                document.getElementById('priceSummary').style.display = 'none';
+                await loadBookings();
+                renderCalendar();
+            } else {
+                showMessage('Une erreur est survenue. Veuillez réessayer.', 'error');
+            }
+        } catch (error) {
+            console.error('❌ Booking error:', error);
+            showMessage('Erreur: ' + error.message, 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Envoyer la demande';
+        }
+    });
+    
+    function showMessage(text, type) {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.textContent = text;
+        messageBox.className = `message ${type}`;
+        messageBox.style.display = 'block';
+        
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, 5000);
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    console.log('✅ Script loaded');
+</script>
+
+</body>
+</html>
