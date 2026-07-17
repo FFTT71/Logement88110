@@ -39,38 +39,69 @@
             margin-bottom: 30px;
         }
         
-        /* Config Box */
-        .config-box {
-            background: #fff3cd;
-            padding: 20px;
-            border-radius: 10px;
+        /* Message Box */
+        .message {
+            padding: 15px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            border-left: 4px solid #ffc107;
+            display: none;
+            animation: slideIn 0.3s;
         }
         
-        .config-box h3 {
-            color: #856404;
-            margin-bottom: 15px;
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
         
-        .config-box input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-bottom: 10px;
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
         
-        .config-box button {
-            background: #ffc107;
-            color: #333;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
         }
         
         /* Tabs */
@@ -109,33 +140,6 @@
         
         .tab-content.active {
             display: block;
-        }
-        
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.9;
         }
         
         /* Filters */
@@ -443,44 +447,6 @@
             margin-bottom: 15px;
         }
         
-        /* Messages */
-        .message {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            animation: slideIn 0.3s;
-        }
-        
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .message.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
         /* Loading */
         .loading {
             text-align: center;
@@ -537,229 +503,187 @@
         <h1>🏠 Administration des Réservations</h1>
         <p class="subtitle">Appartement Lac Léman</p>
         
-        <!-- Config Box -->
-        <div class="config-box" id="configBox">
-            <h3>⚙️ Configuration</h3>
-            <p style="color: #856404; margin-bottom: 15px;">
-                Veuillez entrer l'URL de votre Google Apps Script Web App :
-            </p>
-            <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/XXXXX/exec">
-            <button onclick="saveApiUrl()">Enregistrer et continuer</button>
+        <!-- Message Box -->
+        <div id="messageBox" class="message"></div>
+        
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="statPending">0</div>
+                <div class="stat-label">En attente</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statConfirmed">0</div>
+                <div class="stat-label">Confirmées</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statUpcoming">0</div>
+                <div class="stat-label">À venir</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statRevenue">0€</div>
+                <div class="stat-label">Revenus confirmés</div>
+            </div>
         </div>
         
-        <!-- Main Content -->
-        <div id="mainContent" style="display: none;">
-            
-            <!-- Message Box -->
-            <div id="messageBox" class="message"></div>
-            
-            <!-- Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number" id="statPending">0</div>
-                    <div class="stat-label">En attente</div>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('bookings')">📋 Réservations</button>
+            <button class="tab" onclick="switchTab('blocked')">🚫 Périodes bloquées</button>
+            <button class="tab" onclick="switchTab('settings')">⚙️ Paramètres</button>
+        </div>
+        
+        <!-- Tab: Bookings -->
+        <div id="tab-bookings" class="tab-content active">
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Statut</label>
+                    <select id="filterStatus" onchange="filterBookings()">
+                        <option value="all">Tous</option>
+                        <option value="pending">En attente</option>
+                        <option value="confirmed">Confirmées</option>
+                        <option value="rejected">Rejetées</option>
+                    </select>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="statConfirmed">0</div>
-                    <div class="stat-label">Confirmées</div>
+                <div class="filter-group">
+                    <label>Paiement</label>
+                    <select id="filterPayment" onchange="filterBookings()">
+                        <option value="all">Tous</option>
+                        <option value="paid">Payé</option>
+                        <option value="unpaid">Non payé</option>
+                    </select>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="statUpcoming">0</div>
-                    <div class="stat-label">À venir</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="statRevenue">0€</div>
-                    <div class="stat-label">Revenus confirmés</div>
-                </div>
-            </div>
-            
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('bookings')">📋 Réservations</button>
-                <button class="tab" onclick="switchTab('blocked')">🚫 Périodes bloquées</button>
-                <button class="tab" onclick="switchTab('settings')">⚙️ Paramètres</button>
-            </div>
-            
-            <!-- Tab: Bookings -->
-            <div id="tab-bookings" class="tab-content active">
-                <!-- Filters -->
-                <div class="filters">
-                    <div class="filter-group">
-                        <label>Statut</label>
-                        <select id="filterStatus" onchange="filterBookings()">
-                            <option value="all">Tous</option>
-                            <option value="pending">En attente</option>
-                            <option value="confirmed">Confirmées</option>
-                            <option value="rejected">Rejetées</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>Paiement</label>
-                        <select id="filterPayment" onchange="filterBookings()">
-                            <option value="all">Tous</option>
-                            <option value="paid">Payé</option>
-                            <option value="unpaid">Non payé</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>Recherche</label>
-                        <input type="text" id="searchGuest" placeholder="Nom du client..." oninput="filterBookings()">
-                    </div>
-                </div>
-                
-                <!-- Bookings List -->
-                <div class="bookings-list" id="bookingsList">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <p>Chargement des réservations...</p>
-                    </div>
+                <div class="filter-group">
+                    <label>Recherche</label>
+                    <input type="text" id="searchGuest" placeholder="Nom du client..." oninput="filterBookings()">
                 </div>
             </div>
             
-            <!-- Tab: Blocked Periods -->
-            <div id="tab-blocked" class="tab-content">
-                <div class="block-form">
-                    <h3 style="color: #667eea; margin-bottom: 20px;">Bloquer une période</h3>
-                    <form id="blockForm">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Date de début *</label>
-                                <input type="date" id="blockStartDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Date de fin *</label>
-                                <input type="date" id="blockEndDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Raison</label>
-                                <input type="text" id="blockReason" placeholder="Ex: Maintenance, vacances...">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-confirm" style="width: 100%;">
-                            Bloquer cette période
-                        </button>
-                    </form>
-                </div>
-                
-                <h3 style="margin-bottom: 15px; color: #667eea;">Périodes bloquées</h3>
-                <div class="blocked-list" id="blockedList">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <p>Chargement...</p>
-                    </div>
+            <!-- Bookings List -->
+            <div class="bookings-list" id="bookingsList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Chargement des réservations...</p>
                 </div>
             </div>
-            
-            <!-- Tab: Settings -->
-            <div id="tab-settings" class="tab-content">
-                <form id="settingsForm">
-                    <div class="settings-grid">
-                        <div class="settings-section">
-                            <h3>🏠 Informations de base</h3>
-                            <div class="form-group">
-                                <label>Nom de l'appartement</label>
-                                <input type="text" id="settingApartmentName" value="Appartement Lac Léman">
-                            </div>
-                            <div class="form-group">
-                                <label>Email administrateur</label>
-                                <input type="email" id="settingAdminEmail" placeholder="votre@email.com">
-                            </div>
+        </div>
+        
+        <!-- Tab: Blocked Periods -->
+        <div id="tab-blocked" class="tab-content">
+            <div class="block-form">
+                <h3 style="color: #667eea; margin-bottom: 20px;">Bloquer une période</h3>
+                <form id="blockForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Date de début *</label>
+                            <input type="date" id="blockStartDate" required>
                         </div>
-                        
-                        <div class="settings-section">
-                            <h3>💰 Tarification</h3>
-                            <div class="form-group">
-                                <label>Prix par nuit (€)</label>
-                                <input type="number" id="settingPricePerNight" value="85" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label>Nombre minimum de nuits</label>
-                                <input type="number" id="settingMinNights" value="2" min="1">
-                            </div>
-                            <div class="form-group">
-                                <label>Réduction 7+ nuits (%)</label>
-                                <input type="number" id="settingDiscount7" value="10" min="0" max="100">
-                            </div>
-                            <div class="form-group">
-                                <label>Réduction 14+ nuits (%)</label>
-                                <input type="number" id="settingDiscount14" value="15" min="0" max="100">
-                            </div>
+                        <div class="form-group">
+                            <label>Date de fin *</label>
+                            <input type="date" id="blockEndDate" required>
                         </div>
-                        
-                        <div class="settings-section">
-                            <h3>🏘️ Capacité</h3>
-                            <div class="form-group">
-                                <label>Nombre maximum de personnes</label>
-                                <input type="number" id="settingMaxGuests" value="4" min="1">
-                            </div>
-                        </div>
-                        
-                        <div class="settings-section">
-                            <h3>🕐 Horaires</h3>
-                            <div class="form-group">
-                                <label>Heure d'arrivée</label>
-                                <input type="time" id="settingCheckIn" value="15:00">
-                            </div>
-                            <div class="form-group">
-                                <label>Heure de départ</label>
-                                <input type="time" id="settingCheckOut" value="11:00">
-                            </div>
+                        <div class="form-group">
+                            <label>Raison</label>
+                            <input type="text" id="blockReason" placeholder="Ex: Maintenance, vacances...">
                         </div>
                     </div>
-                    
-                    <button type="submit" class="btn btn-confirm" style="width: 100%; margin-top: 20px; padding: 15px;">
-                        Enregistrer les paramètres
+                    <button type="submit" class="btn btn-confirm" style="width: 100%;">
+                        Bloquer cette période
                     </button>
                 </form>
             </div>
+            
+            <h3 style="margin-bottom: 15px; color: #667eea;">Périodes bloquées</h3>
+            <div class="blocked-list" id="blockedList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Chargement...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab: Settings -->
+        <div id="tab-settings" class="tab-content">
+            <form id="settingsForm">
+                <div class="settings-grid">
+                    <div class="settings-section">
+                        <h3>🏠 Informations de base</h3>
+                        <div class="form-group">
+                            <label>Nom de l'appartement</label>
+                            <input type="text" id="settingApartmentName" value="Appartement Lac Léman">
+                        </div>
+                        <div class="form-group">
+                            <label>Email administrateur</label>
+                            <input type="email" id="settingAdminEmail" placeholder="votre@email.com">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>💰 Tarification</h3>
+                        <div class="form-group">
+                            <label>Prix par nuit (€)</label>
+                            <input type="number" id="settingPricePerNight" value="89" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre minimum de nuits</label>
+                            <input type="number" id="settingMinNights" value="2" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Réduction 7+ nuits (%)</label>
+                            <input type="number" id="settingDiscount7" value="10" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Réduction 14+ nuits (%)</label>
+                            <input type="number" id="settingDiscount14" value="15" min="0" max="100">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>🏘️ Capacité</h3>
+                        <div class="form-group">
+                            <label>Nombre maximum de personnes</label>
+                            <input type="number" id="settingMaxGuests" value="4" min="1">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>🕐 Horaires</h3>
+                        <div class="form-group">
+                            <label>Heure d'arrivée</label>
+                            <input type="time" id="settingCheckIn" value="15:00">
+                        </div>
+                        <div class="form-group">
+                            <label>Heure de départ</label>
+                            <input type="time" id="settingCheckOut" value="11:00">
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-confirm" style="width: 100%; margin-top: 20px; padding: 15px;">
+                    Enregistrer les paramètres
+                </button>
+            </form>
         </div>
     </div>
     
     <script>
-        // Configuration
-        let API_URL = localStorage.getItem('adminBookingApiUrl') || '';
+        // IHRE GOOGLE APPS SCRIPT URL HIER!
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzx8ZZd17DX9rb1kqhXdUZjQD62uH6G0pY-tsPclwRVeMq5j6C2kV9JPaK8rMLZPzuhUw/exec';
+        
         let allBookings = [];
         let allBlocked = [];
         let settings = {};
         
         // Initialisierung
         window.addEventListener('DOMContentLoaded', function() {
-            if (!API_URL) {
-                document.getElementById('configBox').style.display = 'block';
-                document.getElementById('mainContent').style.display = 'none';
-            } else {
-                document.getElementById('configBox').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                initializeApp();
-            }
+            initializeApp();
             
             // Set minimum dates
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('blockStartDate').min = today;
             document.getElementById('blockEndDate').min = today;
         });
-        
-        function saveApiUrl() {
-            const url = document.getElementById('apiUrlInput').value.trim();
-            
-            if (!url) {
-                alert('Veuillez entrer une URL valide');
-                return;
-            }
-            
-            if (!url.includes('script.google.com')) {
-                alert('L\'URL doit être une URL Google Apps Script');
-                return;
-            }
-            
-            API_URL = url;
-            localStorage.setItem('adminBookingApiUrl', url);
-            
-            document.getElementById('configBox').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            
-            initializeApp();
-        }
         
         async function initializeApp() {
             await loadData();
@@ -789,27 +713,36 @@
         async function loadBookings() {
             try {
                 const response = await fetch(`${API_URL}?action=getBookings`);
+                if (!response.ok) throw new Error('Failed to load bookings');
                 allBookings = await response.json();
+                console.log('Bookings loaded:', allBookings.length);
             } catch (error) {
                 console.error('Error loading bookings:', error);
+                allBookings = [];
             }
         }
         
         async function loadBlocked() {
             try {
                 const response = await fetch(`${API_URL}?action=getBlocked`);
+                if (!response.ok) throw new Error('Failed to load blocked');
                 allBlocked = await response.json();
+                console.log('Blocked periods loaded:', allBlocked.length);
             } catch (error) {
                 console.error('Error loading blocked:', error);
+                allBlocked = [];
             }
         }
         
         async function loadSettings() {
             try {
                 const response = await fetch(`${API_URL}?action=getSettings`);
+                if (!response.ok) throw new Error('Failed to load settings');
                 settings = await response.json();
+                console.log('Settings loaded:', settings);
             } catch (error) {
                 console.error('Error loading settings:', error);
+                settings = {};
             }
         }
         
@@ -847,7 +780,6 @@
                 return;
             }
             
-            // Apply filters
             let filtered = filterBookingsList();
             
             if (filtered.length === 0) {
@@ -861,7 +793,6 @@
                 return;
             }
             
-            // Sort by date (newest first)
             filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             
             list.innerHTML = filtered.map(booking => `
@@ -1065,7 +996,6 @@
                 return;
             }
             
-            // Sort by date
             allBlocked.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
             
             list.innerHTML = allBlocked.map(period => `
@@ -1153,13 +1083,25 @@
         function populateSettings() {
             document.getElementById('settingApartmentName').value = settings.apartmentName || '';
             document.getElementById('settingAdminEmail').value = settings.adminEmail || '';
-            document.getElementById('settingPricePerNight').value = settings.pricePerNight || 85;
+            document.getElementById('settingPricePerNight').value = settings.pricePerNight || 89;
             document.getElementById('settingMinNights').value = settings.minNights || 2;
             document.getElementById('settingDiscount7').value = settings.discount7nights || 10;
             document.getElementById('settingDiscount14').value = settings.discount14nights || 15;
             document.getElementById('settingMaxGuests').value = settings.maxGuests || 4;
-            document.getElementById('settingCheckIn').value = settings.checkInTime || '15:00';
-            document.getElementById('settingCheckOut').value = settings.checkOutTime || '11:00';
+            
+            // Zeit-Format korrigieren
+            let checkIn = settings.checkInTime || '15:00';
+            let checkOut = settings.checkOutTime || '11:00';
+            
+            if (checkIn.includes('1899')) {
+                checkIn = '15:00';
+            }
+            if (checkOut.includes('1899')) {
+                checkOut = '11:00';
+            }
+            
+            document.getElementById('settingCheckIn').value = checkIn;
+            document.getElementById('settingCheckOut').value = checkOut;
         }
         
         document.getElementById('settingsForm').addEventListener('submit', async function(e) {
@@ -1200,7 +1142,6 @@
         
         // Tabs
         function switchTab(tabName) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -1208,7 +1149,6 @@
                 tab.classList.remove('active');
             });
             
-            // Show selected tab
             document.getElementById(`tab-${tabName}`).classList.add('active');
             event.target.classList.add('active');
         }
