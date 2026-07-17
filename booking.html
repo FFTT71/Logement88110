@@ -619,103 +619,126 @@
         });
         
         async function loadSettings() {
-            console.log('📥 Loading settings...');
+    console.log('📥 Loading settings...');
+    
+    // DEFAULT WERTE (Fallback)
+    const defaultSettings = {
+        apartmentName: 'Appartement Lac Léman',
+        pricePerNight: '89',
+        minNights: '2',
+        maxGuests: '4',
+        discount7nights: '10',
+        discount14nights: '15',
+        checkInTime: '15:00',
+        checkOutTime: '11:00'
+    };
+    
+    try {
+        const response = await fetch(`${API_URL}?action=getSettings`);
+        
+        if (!response.ok) {
+            console.warn('⚠️ Settings API failed, using defaults');
+            settings = defaultSettings;
+        } else {
+            settings = await response.json();
+            console.log('✅ Settings loaded from API:', settings);
             
+            // Merge mit Defaults (falls Werte fehlen)
+            settings = { ...defaultSettings, ...settings };
+        }
+        
+    } catch (error) {
+        console.error('❌ Error loading settings:', error);
+        console.warn('⚠️ Using default settings');
+        settings = defaultSettings;
+    }
+    
+    console.log('📊 Final settings:', settings);
+    
+    // FIX: Zeit-Format korrigieren
+    function formatTime(timeValue) {
+        if (!timeValue) return '';
+        
+        if (typeof timeValue === 'string' && timeValue.includes(':')) {
+            return timeValue;
+        }
+        
+        if (typeof timeValue === 'string' && timeValue.includes('1899')) {
             try {
-                const response = await fetch(`${API_URL}?action=getSettings`);
-                if (!response.ok) throw new Error('Failed to load settings');
-                settings = await response.json();
-                console.log('✅ Settings loaded:', settings);
-                
-                // FIX: Zeit-Format korrigieren
-                function formatTime(timeValue) {
-                    if (!timeValue) return '';
-                    
-                    if (typeof timeValue === 'string' && timeValue.includes(':')) {
-                        return timeValue;
-                    }
-                    
-                    if (typeof timeValue === 'string' && timeValue.includes('1899')) {
-                        try {
-                            const date = new Date(timeValue);
-                            const hours = String(date.getHours()).padStart(2, '0');
-                            const minutes = String(date.getMinutes()).padStart(2, '0');
-                            return `${hours}:${minutes}`;
-                        } catch (e) {
-                            return timeValue;
-                        }
-                    }
-                    
-                    return timeValue;
-                }
-                
-                // Update UI - Check-in/Check-out Zeiten
-                const checkInTime = formatTime(settings.checkInTime) || '15:00';
-                const checkOutTime = formatTime(settings.checkOutTime) || '11:00';
-                
-                const checkInElement = document.getElementById('checkInTime');
-                const checkOutElement = document.getElementById('checkOutTime');
-                const priceElement = document.getElementById('pricePerNight');
-                
-                if (checkInElement) {
-                    checkInElement.textContent = checkInTime;
-                }
-                if (checkOutElement) {
-                    checkOutElement.textContent = checkOutTime;
-                }
-                if (priceElement) {
-                    priceElement.textContent = settings.pricePerNight || '89';
-                }
-                
-                // FIX: Populate guests dropdown
-                const maxGuests = parseInt(settings.maxGuests) || 4;
-                const select = document.getElementById('numGuests');
-                
-                if (select) {
-                    console.log('📋 Populating guests dropdown, max guests:', maxGuests);
-                    
-                    // Clear existing options
-                    select.innerHTML = '';
-                    
-                    // Add placeholder
-                    const placeholderOption = document.createElement('option');
-                    placeholderOption.value = '';
-                    placeholderOption.textContent = 'Sélectionnez...';
-                    placeholderOption.disabled = true;
-                    placeholderOption.selected = true;
-                    select.appendChild(placeholderOption);
-                    
-                    // Add guest options
-                    for (let i = 1; i <= maxGuests; i++) {
-                        const option = document.createElement('option');
-                        option.value = i;
-                        option.textContent = `${i} personne${i > 1 ? 's' : ''}`;
-                        select.appendChild(option);
-                        console.log(`  ✓ Added option: ${i} personne${i > 1 ? 's' : ''}`);
-                    }
-                    
-                    console.log('✅ Guests dropdown populated with', maxGuests, 'options');
-                } else {
-                    console.error('❌ Element #numGuests not found!');
-                }
-                
-            } catch (error) {
-                console.error('❌ Error loading settings:', error);
-                
-                // Fallback: Populate with default values
-                const select = document.getElementById('numGuests');
-                if (select) {
-                    console.log('⚠️ Using fallback values for guests dropdown');
-                    select.innerHTML = '<option value="" disabled selected>Sélectionnez...</option>';
-                    for (let i = 1; i <= 4; i++) {
-                        select.innerHTML += `<option value="${i}">${i} personne${i > 1 ? 's' : ''}</option>`;
-                    }
-                }
-                
-                throw error;
+                const date = new Date(timeValue);
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${hours}:${minutes}`;
+            } catch (e) {
+                return '15:00';
             }
         }
         
+        return timeValue;
+    }
+    
+    // Update UI - Check-in/Check-out Zeiten
+    const checkInTime = formatTime(settings.checkInTime) || '15:00';
+    const checkOutTime = formatTime(settings.checkOutTime) || '11:00';
+    
+    const checkInElement = document.getElementById('checkInTime');
+    const checkOutElement = document.getElementById('checkOutTime');
+    const priceElement = document.getElementById('pricePerNight');
+    
+    if (checkInElement) {
+        checkInElement.textContent = checkInTime;
+        console.log('✓ Check-in time set:', checkInTime);
+    }
+    if (checkOutElement) {
+        checkOutElement.textContent = checkOutTime;
+        console.log('✓ Check-out time set:', checkOutTime);
+    }
+    if (priceElement) {
+        priceElement.textContent = settings.pricePerNight || '89';
+        console.log('✓ Price set:', settings.pricePerNight);
+    }
+    
+    // FIX: Populate guests dropdown - GARANTIERT FUNKTIONIEREND
+    const maxGuests = parseInt(settings.maxGuests) || 4;
+    const select = document.getElementById('numGuests');
+    
+    console.log('📋 Populating guests dropdown...');
+    console.log('  maxGuests value:', settings.maxGuests);
+    console.log('  maxGuests parsed:', maxGuests);
+    console.log('  Select element:', select);
+    
+    if (!select) {
+        console.error('❌ CRITICAL: Element #numGuests not found in DOM!');
+        return;
+    }
+    
+    // Clear existing options
+    select.innerHTML = '';
+    console.log('  ✓ Cleared existing options');
+    
+    // Add placeholder
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.textContent = 'Sélectionnez...';
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select.appendChild(placeholderOption);
+    console.log('  ✓ Added placeholder');
+    
+    // Add guest options
+    for (let i = 1; i <= maxGuests; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `${i} personne${i > 1 ? 's' : ''}`;
+        select.appendChild(option);
+        console.log(`  ✓ Added option ${i}: ${option.textContent}`);
+    }
+    
+    console.log('✅ Guests dropdown populated successfully!');
+    console.log('  Total options:', select.options.length);
+    console.log('  Select HTML:', select.innerHTML);
+}
+
         async function loadBookings() {
             console.log('📥 Loading bookings...');
             
