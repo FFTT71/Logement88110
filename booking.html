@@ -609,22 +609,22 @@
     });
     
     async function loadSettings() {
-        console.log('📥 Loading settings...');
+    console.log('📥 Loading settings...');
+    
+    try {
         const response = await fetch(`${API_URL}?action=getSettings`);
         if (!response.ok) throw new Error('Failed to load settings');
         settings = await response.json();
         console.log('✅ Settings loaded:', settings);
         
-        // FIX 3: Zeit-Format korrigieren
+        // FIX: Zeit-Format korrigieren
         function formatTime(timeValue) {
             if (!timeValue) return '';
             
-            // Wenn es bereits im Format HH:MM ist
             if (typeof timeValue === 'string' && timeValue.includes(':')) {
                 return timeValue;
             }
             
-            // Wenn es ein Timestamp ist
             if (typeof timeValue === 'string' && timeValue.includes('1899')) {
                 try {
                     const date = new Date(timeValue);
@@ -639,30 +639,72 @@
             return timeValue;
         }
         
-        // Update UI
+        // Update UI - Check-in/Check-out Zeiten
         const checkInTime = formatTime(settings.checkInTime) || '15:00';
         const checkOutTime = formatTime(settings.checkOutTime) || '11:00';
         
-        if (document.getElementById('checkInTime')) {
-            document.getElementById('checkInTime').textContent = checkInTime;
+        const checkInElement = document.getElementById('checkInTime');
+        const checkOutElement = document.getElementById('checkOutTime');
+        const priceElement = document.getElementById('pricePerNight');
+        
+        if (checkInElement) {
+            checkInElement.textContent = checkInTime;
         }
-        if (document.getElementById('checkOutTime')) {
-            document.getElementById('checkOutTime').textContent = checkOutTime;
+        if (checkOutElement) {
+            checkOutElement.textContent = checkOutTime;
         }
-        if (document.getElementById('pricePerNight')) {
-            document.getElementById('pricePerNight').textContent = settings.pricePerNight || '89';
+        if (priceElement) {
+            priceElement.textContent = settings.pricePerNight || '89';
         }
         
-        // Populate guests dropdown
-        const maxGuests = settings.maxGuests || 4;
+        // FIX: Populate guests dropdown
+        const maxGuests = parseInt(settings.maxGuests) || 4;
+        const select = document.getElementById('numGuests');
+        
+        if (select) {
+            console.log('Populating guests dropdown, max guests:', maxGuests);
+            
+            // Clear existing options
+            select.innerHTML = '';
+            
+            // Add placeholder
+            const placeholderOption = document.createElement('option');
+            placeholderOption.value = '';
+            placeholderOption.textContent = 'Sélectionnez...';
+            placeholderOption.disabled = true;
+            placeholderOption.selected = true;
+            select.appendChild(placeholderOption);
+            
+            // Add guest options
+            for (let i = 1; i <= maxGuests; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `${i} personne${i > 1 ? 's' : ''}`;
+                select.appendChild(option);
+                console.log(`Added option: ${i} personne${i > 1 ? 's' : ''}`);
+            }
+            
+            console.log('✅ Guests dropdown populated with', maxGuests, 'options');
+        } else {
+            console.error('❌ Element #numGuests not found!');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error loading settings:', error);
+        
+        // Fallback: Populate with default values
         const select = document.getElementById('numGuests');
         if (select) {
             select.innerHTML = '<option value="">Sélectionnez...</option>';
-            for (let i = 1; i <= maxGuests; i++) {
+            for (let i = 1; i <= 4; i++) {
                 select.innerHTML += `<option value="${i}">${i} personne${i > 1 ? 's' : ''}</option>`;
             }
         }
+        
+        throw error;
     }
+}
+
     
     async function loadBookings() {
         console.log('📥 Loading bookings...');
