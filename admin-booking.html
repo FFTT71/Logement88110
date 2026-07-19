@@ -501,7 +501,7 @@
 <body>
     <div class="container">
         <h1>🏠 Administration des Réservations</h1>
-        <p class="subtitle">Appartement Lac Léman</p>
+        <p class="subtitle">La maison du Nid Vosgien</p>
         
         <!-- Message Box -->
         <div id="messageBox" class="message"></div>
@@ -611,7 +611,7 @@
                         <h3>🏠 Informations de base</h3>
                         <div class="form-group">
                             <label>Nom de l'appartement</label>
-                            <input type="text" id="settingApartmentName" value="Appartement Lac Léman">
+                            <input type="text" id="settingApartmentName" value="La maison du Nid Vosgien">
                         </div>
                         <div class="form-group">
                             <label>Email administrateur</label>
@@ -977,7 +977,7 @@
         }
         
         function contactGuest(email, name) {
-            const subject = encodeURIComponent(`Votre réservation - Appartement Lac Léman`);
+            const subject = encodeURIComponent(`Votre réservation - La maison du Nid Vosgien`);
             const body = encodeURIComponent(`Bonjour ${name},\n\n`);
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         }
