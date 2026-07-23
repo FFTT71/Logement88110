@@ -415,16 +415,14 @@
                     <h2>📸 Photos</h2>
                     <div class="gallery">
                         <div class="gallery">
-                            <div class="gallery-main">
-                                <img src="images/Logo.png" 
-                                     alt="Farshid" 
-                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                            </div>
-                            <div class="gallery-thumb">
-                                <img src="images/Bild.png" 
-                                     alt="Chambre" 
-                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                            </div>
+                            <div class="gallery-main" onclick="openLightbox('images/Logo.png')">
+                            <img src="images/Logo.png" 
+                                 alt="Appartement Lac Léman">
+                        </div>
+                            <div class="gallery-thumb" onclick="openLightbox('images/Bild.png')">
+                            <img src="images/Bild.png" 
+                                 alt="Chambre">
+                            </div>              
                         </div>
 
                     </div>
@@ -1238,5 +1236,29 @@
         
         console.log('✅ Script loaded');
     </script>
+<!-- Lightbox für Bilder -->
+<div id="lightbox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center;">
+    <span style="position: absolute; top: 20px; right: 40px; color: white; font-size: 40px; cursor: pointer;" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" style="max-width: 90%; max-height: 90%; border-radius: 10px;">
+</div>
+
+<script>
+function openLightbox(imgSrc) {
+    document.getElementById('lightbox').style.display = 'flex';
+    document.getElementById('lightbox-img').src = imgSrc;
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+}
+
+// ESC-Taste zum Schließen
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeLightbox();
+    }
+});
+</script>
+
 </body>
 </html>
