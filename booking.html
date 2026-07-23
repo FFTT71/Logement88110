@@ -398,6 +398,111 @@
             padding: 40px;
             color: #666;
         }
+
+
+     /* ========================================
+   MOBILE OPTIMIERUNG FÜR LIGHTBOX
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Lightbox Pfeile kleiner */
+    #lightbox > div {
+        font-size: 40px !important;
+        width: 60px !important;
+        height: 60px !important;
+        padding: 15px !important;
+    }
+    
+    /* Linker Pfeil */
+    #lightbox > div:nth-child(2) {
+        left: 10px !important;
+    }
+    
+    /* Rechter Pfeil */
+    #lightbox > div:nth-child(3) {
+        right: 10px !important;
+    }
+    
+    /* Schließen-Button */
+    #lightbox > span {
+        font-size: 40px !important;
+        right: 20px !important;
+        top: 10px !important;
+    }
+    
+    /* Bild-Zähler */
+    #image-counter {
+        font-size: 14px !important;
+        bottom: 15px !important;
+        padding: 8px 15px !important;
+    }
+    
+    /* Bild im Lightbox */
+    #lightbox-img {
+        max-width: 95% !important;
+        max-height: 80% !important;
+    }
+    
+    /* Galerie-Layout */
+    .gallery {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    
+    .gallery-main {
+        grid-column: 1 / -1 !important;
+        height: 250px !important;
+    }
+    
+    .gallery-thumb {
+        height: 120px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Sehr kleine Bildschirme */
+    #lightbox > div {
+        font-size: 30px !important;
+        width: 50px !important;
+        height: 50px !important;
+        padding: 10px !important;
+    }
+    
+    #lightbox > div:nth-child(2) {
+        left: 5px !important;
+    }
+    
+    #lightbox > div:nth-child(3) {
+        right: 5px !important;
+    }
+    
+    #lightbox > span {
+        font-size: 35px !important;
+        right: 15px !important;
+        top: 10px !important;
+    }
+    
+    #image-counter {
+        font-size: 12px !important;
+        bottom: 10px !important;
+        padding: 6px 12px !important;
+    }
+    
+    #lightbox-img {
+        max-width: 98% !important;
+        max-height: 75% !important;
+    }
+    
+    .gallery-main {
+        height: 200px !important;
+    }
+    
+    .gallery-thumb {
+        height: 100px !important;
+    }
+}
+
+
+        
     </style>
 </head>
 <body>
