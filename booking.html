@@ -502,6 +502,62 @@
 }
 
 
+   /* ========================================
+   HEADER RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .header > div {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    
+    .header img[alt="La maison du Nid Vosgien"] {
+        height: 140px !important;
+    }
+    
+    .header #qr-code,
+    .header img[alt="Propriétaire"] {
+        width: 120px !important;
+        height: 120px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .header > div {
+        padding: 15px !important;
+    }
+    
+    .header img[alt="La maison du Nid Vosgien"] {
+        height: 100px !important;
+    }
+    
+    .header #qr-code,
+    .header img[alt="Propriétaire"] {
+        width: 100px !important;
+        height: 100px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .header img[alt="La maison du Nid Vosgien"] {
+        height: 80px !important;
+    }
+    
+    .header #qr-code,
+    .header img[alt="Propriétaire"] {
+        width: 80px !important;
+        height: 80px !important;
+    }
+    
+    .header p {
+        font-size: 11px !important;
+    }
+}
+
+
+
+        
         
     </style>
 </head>
