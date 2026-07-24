@@ -652,69 +652,128 @@ window.addEventListener('DOMContentLoaded', function() {
                     </p>
                     
                     <h3 style="margin-top: 20px; margin-bottom: 15px; color: #667eea;">✨ Équipements</h3>
-                    <div class="features">
-                        <div class="feature-item">
-                            <span class="feature-icon">📶</span>
-                            <span>WiFi gratuit</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🍳</span>
-                            <span>Cuisine équipée</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🧺</span>
-                            <span>Lave-linge</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🅿️</span>
-                            <span>Parking gratuit</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🌅</span>
-                            <span>Balcon</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">📺</span>
-                            <span>TV écran plat</span>
-                        </div>
+                    <!-- Ersten 6 Equipments (immer sichtbar) -->
+    <div class="features">
+        <div class="feature-item">
+            <span class="feature-icon">📶</span>
+            <span>WiFi gratuit</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🍳</span>
+            <span>Cuisine équipée</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🧺</span>
+            <span>Lave-linge</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🅿️</span>
+            <span>Parking gratuit</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🌅</span>
+            <span>Balcon</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">📺</span>
+            <span>TV écran plat</span>
+        </div>
+    </div>
+    
+    <!-- Weitere Equipments (versteckt) -->
+    <div id="more-features" class="features" style="display: none; margin-top: 15px;">
+        <div class="feature-item">
+            <span class="feature-icon">🛏️</span>
+            <span>Rangement des vêtements</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🔥</span>
+            <span>Four</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🛏️</span>
+            <span>Linge de lit</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🔧</span>
+            <span>Fer à repasser</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🧴</span>
+            <span>Après-shampoing</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🚿</span>
+            <span>Gel douche</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">☕</span>
+            <span>Cafetière</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🍽️</span>
+            <span>Vaisselle complète</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🌡️</span>
+            <span>Chauffage</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">🪑</span>
+            <span>Mobilier de jardin</span>
+        </div>
+    </div>
+    
+    <!-- Toggle Button -->
+    <button id="toggle-features-btn" onclick="toggleFeatures()" style="
+        width: 100%;
+        margin-top: 20px;
+        padding: 15px;
+        background: white;
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        color: #667eea;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    " onmouseover="this.style.background='#667eea'; this.style.color='white';" onmouseout="this.style.background='white'; this.style.color='#667eea';">
+        <span id="toggle-text">Afficher plus d'équipements</span>
+        <span id="toggle-arrow" style="font-size: 20px; transition: transform 0.3s;">▼</span>
+    </button>
+</div>
 
-                        <div class="feature-item">
-                            <span class="feature-icon">📺</span>
-                            <span>Rangement des vêtements</span>
-                        </div>
-
-                        <div class="feature-item">
-                            <span class="feature-icon">📺</span>
-                            <span>Four</span>
-                        </div>
-
-                        <div class="feature-item">
-                            <span class="feature-icon">📺</span>
-                            <span>Linge de lit</span>
-                        </div>
-
-                        <div class="feature-item">
-                            <span class="feature-icon">📺</span>
-                            <span>Fer à repasser</span>
-                        </div>
-
-                        <div class="feature-item">
-                            <span class="feature-icon">📺</span>
-                            <span>Après-shampoing</span>
-                        </div>
-
-                        <div class="feature-item">
-                            <span class="feature-icon">📺</span>
-                            <span>Gel douche</span>
-                        </div>
-
-
-
-
-
-                        
-                    </div>
-                </div>
+<script>
+function toggleFeatures() {
+    const moreFeatures = document.getElementById('more-features');
+    const toggleText = document.getElementById('toggle-text');
+    const toggleArrow = document.getElementById('toggle-arrow');
+    
+    if (moreFeatures.style.display === 'none') {
+        // Mehr anzeigen
+        moreFeatures.style.display = 'grid';
+        toggleText.textContent = 'Afficher moins d\'équipements';
+        toggleArrow.textContent = '▲';
+        toggleArrow.style.transform = 'rotate(180deg)';
+    } else {
+        // Weniger anzeigen
+        moreFeatures.style.display = 'none';
+        toggleText.textContent = 'Afficher plus d\'équipements';
+        toggleArrow.textContent = '▼';
+        toggleArrow.style.transform = 'rotate(0deg)';
+        
+        // Scroll zurück zum Button (optional)
+        document.getElementById('toggle-features-btn').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'nearest' 
+        });
+    }
+}
+</script>
                 
                 <div class="card">
                     <h2>📋 Règlement intérieur</h2>
