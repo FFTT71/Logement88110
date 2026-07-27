@@ -600,20 +600,7 @@
     }
 }
 
-/* ============================================
-   KOMPAKTER KALENDER
-   ============================================ */
-
-#calendar {
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-@media (max-width: 768px) {
-    #calendar {
-        max-width: 100%;
-    }
-}
+        
         
     </style>
 </head>
@@ -1118,27 +1105,19 @@ function toggleFeatures() {
 </div>
 
 <script>
-// ============================================
-// API KONFIGURATION
-// ============================================
-
-const API_URL = 'https://script.google.com/macros/s/AKfycbwKSYX5rnG3tPuEPWZNGvgCZXaJtPCZg0Xjj-Aw8Ub8FPZQgZzj7Bh8FRkKZBYTXDhE/exec';
-
-// ============================================
-// GÄSTE-SELECTOR
-// ============================================
-
+// Gäste-Zähler
 let guestsData = {
     adults: 1,
     children: 0,
     babies: 0
 };
 
+// Toggle Dropdown
 function toggleGuestsDropdown() {
     const dropdown = document.getElementById('guests-dropdown');
     const arrow = document.getElementById('dropdown-arrow');
     
-    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+    if (dropdown.style.display === 'none') {
         dropdown.style.display = 'block';
         arrow.style.transform = 'rotate(180deg)';
     } else {
@@ -1147,15 +1126,25 @@ function toggleGuestsDropdown() {
     }
 }
 
+// Dropdown schließen
 function closeGuestsDropdown() {
     document.getElementById('guests-dropdown').style.display = 'none';
     document.getElementById('dropdown-arrow').style.transform = 'rotate(0deg)';
 }
 
+// Gäste ändern
 function changeGuests(type, change) {
-    if (type === 'adults' && guestsData.adults + change < 1) return;
-    if ((type === 'children' || type === 'babies') && guestsData[type] + change < 0) return;
+    // Minimum 1 Erwachsener
+    if (type === 'adults' && guestsData.adults + change < 1) {
+        return;
+    }
     
+    // Minimum 0 für Kinder und Babys
+    if ((type === 'children' || type === 'babies') && guestsData[type] + change < 0) {
+        return;
+    }
+    
+    // Maximum prüfen (optional)
     const maxGuests = 10;
     const totalGuests = guestsData.adults + guestsData.children + guestsData.babies + change;
     if (totalGuests > maxGuests) {
@@ -1163,485 +1152,67 @@ function changeGuests(type, change) {
         return;
     }
     
+    // Wert ändern
     guestsData[type] += change;
+    
+    // Anzeige aktualisieren
     updateGuestsDisplay();
 }
 
+// Anzeige aktualisieren
 function updateGuestsDisplay() {
+    // Zähler aktualisieren
     document.getElementById('adults-count').textContent = guestsData.adults;
     document.getElementById('children-count').textContent = guestsData.children;
     document.getElementById('babies-count').textContent = guestsData.babies;
     
+    // Gesamt berechnen
     const total = guestsData.adults + guestsData.children + guestsData.babies;
+    document.getElementById('total-guests').textContent = total;
     
+    // Versteckte Felder aktualisieren
     document.getElementById('numGuests').value = total;
     document.getElementById('adults').value = guestsData.adults;
     document.getElementById('children').value = guestsData.children;
     document.getElementById('babies').value = guestsData.babies;
     
+    // Summary Text erstellen
     let summaryParts = [];
-    if (guestsData.adults > 0) summaryParts.push(`${guestsData.adults} adulte${guestsData.adults > 1 ? 's' : ''}`);
-    if (guestsData.children > 0) summaryParts.push(`${guestsData.children} enfant${guestsData.children > 1 ? 's' : ''}`);
-    if (guestsData.babies > 0) summaryParts.push(`${guestsData.babies} bébé${guestsData.babies > 1 ? 's' : ''}`);
-    
-    const summaryText = summaryParts.join(', ');
-    const guestsSummary = document.getElementById('guests-summary');
-    if (guestsSummary) {
-        guestsSummary.innerHTML = `
-            <span style="color: #667eea; font-weight: 600; font-size: 18px;">${total}</span> 
-            <span style="color: #333; font-weight: 500;">personne${total > 1 ? 's' : ''}</span>
-            ${summaryText ? `<span style="color: #999; font-size: 13px; margin-left: 8px;">(${summaryText})</span>` : ''}
-        `;
+    if (guestsData.adults > 0) {
+        summaryParts.push(`${guestsData.adults} adulte${guestsData.adults > 1 ? 's' : ''}`);
     }
+    if (guestsData.children > 0) {
+        summaryParts.push(`${guestsData.children} enfant${guestsData.children > 1 ? 's' : ''}`);
+    }
+    if (guestsData.babies > 0) {
+        summaryParts.push(`${guestsData.babies} bébé${guestsData.babies > 1 ? 's' : ''}`);
+    }
+    
+    const summaryText = summaryParts.length > 0 ? summaryParts.join(', ') : '0 personne';
+    document.getElementById('guests-summary').innerHTML = `
+        <span style="color: #667eea; font-weight: 600;">${total}</span> personne${total > 1 ? 's' : ''} 
+        <span style="color: #999; font-size: 13px; margin-left: 8px;">(${summaryText})</span>
+    `;
 }
 
+// Click außerhalb schließt Dropdown
 document.addEventListener('click', function(event) {
     const dropdown = document.getElementById('guests-dropdown');
     const display = document.getElementById('guests-display');
     
-    if (dropdown && display && dropdown.style.display === 'block') {
-        if (!dropdown.contains(event.target) && !display.contains(event.target)) {
-            closeGuestsDropdown();
-        }
+    if (dropdown.style.display === 'block' && 
+        !dropdown.contains(event.target) && 
+        !display.contains(event.target)) {
+        closeGuestsDropdown();
     }
 });
 
-// ============================================
-// KALENDER-FUNKTIONEN (FIX)
-// ============================================
-
-let bookedDates = [];
-let blockedDates = [];
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
-let selectedArrival = null;
-let selectedDeparture = null;
-
-async function loadCalendar() {
-    try {
-        console.log('Loading calendar data...');
-        
-        // Buchungen laden
-        const bookingsResponse = await fetch(`${API_URL}?action=getBookings`);
-        
-        if (bookingsResponse.ok) {
-            const bookings = await bookingsResponse.json();
-            console.log('Bookings:', bookings);
-            
-            if (Array.isArray(bookings)) {
-                bookedDates = [];
-                bookings.forEach(booking => {
-                    if (booking.status === 'confirmed' || booking.status === 'pending') {
-                        const start = new Date(booking.arrivalDate);
-                        const end = new Date(booking.departureDate);
-                        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-                            bookedDates.push(new Date(d).toISOString().split('T')[0]);
-                        }
-                    }
-                });
-            }
-        }
-        
-        // Gesperrte Daten laden
-        const blockedResponse = await fetch(`${API_URL}?action=getBlocked`);
-        
-        if (blockedResponse.ok) {
-            const blocked = await blockedResponse.json();
-            console.log('Blocked:', blocked);
-            
-            if (Array.isArray(blocked)) {
-                blockedDates = [];
-                blocked.forEach(period => {
-                    const start = new Date(period.startDate);
-                    const end = new Date(period.endDate);
-                    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-                        blockedDates.push(new Date(d).toISOString().split('T')[0]);
-                    }
-                });
-            }
-        }
-        
-        console.log('Booked dates:', bookedDates);
-        console.log('Blocked dates:', blockedDates);
-        
-        // Kalender rendern
-        renderCalendar();
-        
-    } catch (error) {
-        console.error('Error loading calendar:', error);
-        // Auch bei Fehler Kalender anzeigen
-        renderCalendar();
-    }
-}
-
-function renderCalendar() {
-    const calendarContainer = document.getElementById('calendar');
-    
-    if (!calendarContainer) {
-        console.error('Calendar container not found!');
-        return;
-    }
-    
-    console.log('Rendering calendar for:', currentMonth + 1, currentYear);
-    
-    // Kalender leeren
-    calendarContainer.innerHTML = '';
-    
-    // Wrapper für bessere Kontrolle
-    const wrapper = document.createElement('div');
-    wrapper.style.cssText = 'max-width: 420px; margin: 0 auto;';
-    
-    // Header mit Navigation
-    const header = document.createElement('div');
-    header.style.cssText = `
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-        padding: 12px 15px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 8px;
-        color: white;
-    `;
-    
-    // Vorheriger Monat Button
-    const prevBtn = document.createElement('button');
-    prevBtn.innerHTML = '◀';
-    prevBtn.type = 'button';
-    prevBtn.style.cssText = `
-        background: rgba(255,255,255,0.2);
-        border: none;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background 0.3s;
-    `;
-    prevBtn.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.3)'; };
-    prevBtn.onmouseout = function() { this.style.background = 'rgba(255,255,255,0.2)'; };
-    prevBtn.onclick = function(e) {
-        e.preventDefault();
-        currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        renderCalendar();
-    };
-    
-    // Monat/Jahr Anzeige
-    const monthYear = document.createElement('div');
-    monthYear.style.cssText = 'font-size: 16px; font-weight: 700;';
-    const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-    monthYear.textContent = `${months[currentMonth]} ${currentYear}`;
-    
-    // Nächster Monat Button
-    const nextBtn = document.createElement('button');
-    nextBtn.innerHTML = '▶';
-    nextBtn.type = 'button';
-    nextBtn.style.cssText = `
-        background: rgba(255,255,255,0.2);
-        border: none;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background 0.3s;
-    `;
-    nextBtn.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.3)'; };
-    nextBtn.onmouseout = function() { this.style.background = 'rgba(255,255,255,0.2)'; };
-    nextBtn.onclick = function(e) {
-        e.preventDefault();
-        currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-        renderCalendar();
-    };
-    
-    header.appendChild(prevBtn);
-    header.appendChild(monthYear);
-    header.appendChild(nextBtn);
-    wrapper.appendChild(header);
-    
-    // Wochentage
-    const weekdays = document.createElement('div');
-    weekdays.style.cssText = `
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 3px;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #667eea;
-        font-size: 12px;
-    `;
-    
-    ['L', 'M', 'M', 'J', 'V', 'S', 'D'].forEach(day => {
-        const dayEl = document.createElement('div');
-        dayEl.textContent = day;
-        dayEl.style.cssText = 'text-align: center; padding: 5px;';
-        weekdays.appendChild(dayEl);
-    });
-    wrapper.appendChild(weekdays);
-    
-    // Tage Grid
-    const daysGrid = document.createElement('div');
-    daysGrid.style.cssText = `
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 3px;
-        margin-bottom: 15px;
-    `;
-    
-    // Ersten Tag des Monats berechnen
-    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const startDay = firstDay === 0 ? 6 : firstDay - 1; // Montag = 0
-    
-    // Leere Zellen am Anfang
-    for (let i = 0; i < startDay; i++) {
-        const emptyDay = document.createElement('div');
-        emptyDay.style.cssText = 'padding: 10px;';
-        daysGrid.appendChild(emptyDay);
-    }
-    
-    // Heutiges Datum
-    const today = new Date().toISOString().split('T')[0];
-    
-    // Tage des Monats
-    for (let day = 1; day <= daysInMonth; day++) {
-        const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        
-        const dayEl = document.createElement('div');
-        dayEl.textContent = day;
-        dayEl.style.cssText = `
-            padding: 10px;
-            text-align: center;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-            font-size: 13px;
-            background: white;
-            border: 1px solid #e0e0e0;
-        `;
-        
-        const isPast = dateStr < today;
-        const isBooked = bookedDates.includes(dateStr);
-        const isBlocked = blockedDates.includes(dateStr);
-        const isSelected = dateStr === selectedArrival || dateStr === selectedDeparture;
-        
-        if (isPast || isBooked || isBlocked) {
-            dayEl.style.background = '#f0f0f0';
-            dayEl.style.color = '#ccc';
-            dayEl.style.cursor = 'not-allowed';
-            dayEl.style.border = '1px solid #e0e0e0';
-        } else if (isSelected) {
-            dayEl.style.background = '#667eea';
-            dayEl.style.color = 'white';
-            dayEl.style.border = '1px solid #667eea';
-        } else {
-            dayEl.onmouseover = function() {
-                this.style.background = '#667eea';
-                this.style.color = 'white';
-            };
-            
-            dayEl.onmouseout = function() {
-                this.style.background = 'white';
-                this.style.color = '#333';
-            };
-            
-            dayEl.onclick = function(e) {
-                e.preventDefault();
-                selectDate(dateStr);
-            };
-        }
-        
-        daysGrid.appendChild(dayEl);
-    }
-    
-    wrapper.appendChild(daysGrid);
-    
-    // Legende
-    const legend = document.createElement('div');
-    legend.style.cssText = `
-        display: flex;
-        gap: 15px;
-        padding: 10px;
-        background: #f8f9fa;
-        border-radius: 6px;
-        flex-wrap: wrap;
-        justify-content: center;
-        font-size: 11px;
-    `;
-    legend.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <div style="width: 15px; height: 15px; background: white; border: 1px solid #e0e0e0; border-radius: 3px;"></div>
-            <span>Disponible</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <div style="width: 15px; height: 15px; background: #667eea; border-radius: 3px;"></div>
-            <span>Sélectionné</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <div style="width: 15px; height: 15px; background: #f0f0f0; border-radius: 3px;"></div>
-            <span>Réservé</span>
-        </div>
-    `;
-    wrapper.appendChild(legend);
-    
-    // Alles zum Container hinzufügen
-    calendarContainer.appendChild(wrapper);
-    
-    console.log('Calendar rendered successfully!');
-}
-
-function selectDate(dateStr) {
-    console.log('Date selected:', dateStr);
-    
-    if (!selectedArrival || (selectedArrival && selectedDeparture)) {
-        // Neue Auswahl
-        selectedArrival = dateStr;
-        selectedDeparture = null;
-        document.getElementById('arrivalDate').value = dateStr;
-        document.getElementById('departureDate').value = '';
-        console.log('Arrival set:', dateStr);
-    } else if (selectedArrival && !selectedDeparture) {
-        if (dateStr > selectedArrival) {
-            // Abreise setzen
-            selectedDeparture = dateStr;
-            document.getElementById('departureDate').value = dateStr;
-            console.log('Departure set:', dateStr);
-            calculateNights();
-        } else {
-            // Früher als Ankunft - neu starten
-            selectedArrival = dateStr;
-            selectedDeparture = null;
-            document.getElementById('arrivalDate').value = dateStr;
-            document.getElementById('departureDate').value = '';
-            console.log('Arrival reset:', dateStr);
-        }
-    }
-    
-    renderCalendar();
-}
-
-function calculateNights() {
-    const arrival = document.getElementById('arrivalDate').value;
-    const departure = document.getElementById('departureDate').value;
-    
-    if (arrival && departure) {
-        const start = new Date(arrival);
-        const end = new Date(departure);
-        const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-        
-        if (nights > 0) {
-            document.getElementById('numNights').value = nights;
-            console.log('Nights calculated:', nights);
-            calculatePrice();
-        }
-    }
-}
-
-async function calculatePrice() {
-    const nights = parseInt(document.getElementById('numNights').value) || 0;
-    
-    if (nights <= 0) {
-        document.getElementById('totalPrice').value = '0';
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${API_URL}?action=getSettings`);
-        const settings = await response.json();
-        
-        const pricePerNight = parseFloat(settings.pricePerNight) || 89;
-        const discount7 = parseFloat(settings.discount7nights) || 10;
-        const discount14 = parseFloat(settings.discount14nights) || 15;
-        
-        let total = nights * pricePerNight;
-        
-        if (nights >= 14) {
-            total = total * (1 - discount14 / 100);
-        } else if (nights >= 7) {
-            total = total * (1 - discount7 / 100);
-        }
-        
-        document.getElementById('totalPrice').value = Math.round(total);
-        console.log('Price calculated:', Math.round(total));
-        
-    } catch (error) {
-        console.error('Error calculating price:', error);
-        document.getElementById('totalPrice').value = nights * 89;
-    }
-}
-
-// ============================================
-// FORMULAR-SUBMIT
-// ============================================
-
-document.getElementById('bookingForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const submitBtn = document.getElementById('submitBtn');
-    const originalText = submitBtn.textContent;
-    
-    submitBtn.textContent = 'Envoi en cours...';
-    submitBtn.disabled = true;
-    
-    const formData = new FormData(this);
-    const data = Object.fromEntries(formData.entries());
-    
-    try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify(data)
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            alert('✅ Votre demande a été envoyée avec succès!\n\nVous recevrez une confirmation par email.');
-            this.reset();
-            guestsData = { adults: 1, children: 0, babies: 0 };
-            updateGuestsDisplay();
-            selectedArrival = null;
-            selectedDeparture = null;
-            loadCalendar();
-        } else {
-            alert('❌ Erreur: ' + (result.message || 'Une erreur est survenue'));
-        }
-        
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Erreur lors de l\'envoi. Veuillez réessayer.');
-    } finally {
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-    }
-});
-
-// ============================================
-// INITIALISIERUNG
-// ============================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Page loaded, initializing...');
-    updateGuestsDisplay();
-    loadCalendar();
-});
-
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    updateGuestsDisplay();
-}
+// Initial anzeigen
+updateGuestsDisplay();
 </script>
 
 
 
-                        
                         
 
 
