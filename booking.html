@@ -1233,9 +1233,380 @@ document.addEventListener('DOMContentLoaded', function() {
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
     updateGuestsDisplay();
 }
+
+
+
+
+// ============================================
+// KALENDER-FUNKTIONEN
+// ============================================
+
+let bookedDates = [];
+let blockedDates = [];
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+let selectedArrival = null;
+let selectedDeparture = null;
+
+// API URL
+const API_URL = 'https://script.google.com/macros/s/AKfycbwKSYX5rnG3tPuEPWZNGvgCZXaJtPCZg0Xjj-Aw8Ub8FPZQgZzj7Bh8FRkKZBYTXDhE/exec';
+
+// Kalender laden
+async function loadCalendar() {
+    try {
+        console.log('Loading calendar data...');
+        
+        // Buchungen laden
+        const bookingsResponse = await fetch(`${API_URL}?action=getBookings`);
+        
+        if (!bookingsResponse.ok) {
+            throw new Error('Failed to load bookings');
+        }
+        
+        const bookings = await bookingsResponse.json();
+        console.log('Bookings loaded:', bookings);
+        
+        // Prüfen ob bookings ein Array ist
+        if (!Array.isArray(bookings)) {
+            console.error('Bookings is not an array:', bookings);
+            bookedDates = [];
+        } else {
+            bookedDates = [];
+            
+            bookings.forEach(booking => {
+                if (booking.status === 'confirmed' || booking.status === 'pending') {
+                    const start = new Date(booking.arrivalDate);
+                    const end = new Date(booking.departureDate);
+                    
+                    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                        bookedDates.push(new Date(d).toISOString().split('T')[0]);
+                    }
+                }
+            });
+        }
+        
+        // Gesperrte Daten laden
+        const blockedResponse = await fetch(`${API_URL}?action=getBlocked`);
+        
+        if (!blockedResponse.ok) {
+            throw new Error('Failed to load blocked dates');
+        }
+        
+        const blocked = await blockedResponse.json();
+        console.log('Blocked dates loaded:', blocked);
+        
+        // Prüfen ob blocked ein Array ist
+        if (!Array.isArray(blocked)) {
+            console.error('Blocked is not an array:', blocked);
+            blockedDates = [];
+        } else {
+            blockedDates = [];
+            
+            blocked.forEach(period => {
+                const start = new Date(period.startDate);
+                const end = new Date(period.endDate);
+                
+                for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                    blockedDates.push(new Date(d).toISOString().split('T')[0]);
+                }
+            });
+        }
+        
+        console.log('Booked dates:', bookedDates);
+        console.log('Blocked dates:', blockedDates);
+        
+        // Kalender aktualisieren
+        updateCalendar();
+        
+    } catch (error) {
+        console.error('Error loading calendar:', error);
+        bookedDates = [];
+        blockedDates = [];
+        
+        // Zeige Fehlermeldung
+        showNotification('Erreur de chargement du calendrier. Veuillez réessayer.', 'error');
+    }
+}
+
+// Kalender aktualisieren
+function updateCalendar() {
+    const calendar = document.getElementById('calendar');
+    if (!calendar) {
+        console.error('Calendar element not found');
+        return;
+    }
+    
+    calendar.innerHTML = '';
+    
+    // Header mit Monat/Jahr
+    const header = document.createElement('div');
+    header.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white;';
+    
+    const prevBtn = document.createElement('button');
+    prevBtn.innerHTML = '◀';
+    prevBtn.type = 'button';
+    prevBtn.style.cssText = 'background: rgba(255,255,255,0.2); border: none; color: white; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 18px; transition: all 0.3s;';
+    prevBtn.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.3)'; };
+    prevBtn.onmouseout = function() { this.style.background = 'rgba(255,255,255,0.2)'; };
+    prevBtn.onclick = function() {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        updateCalendar();
+    };
+    
+    const monthYear = document.createElement('div');
+    monthYear.style.cssText = 'font-size: 20px; font-weight: 700;';
+    const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+    monthYear.textContent = `${months[currentMonth]} ${currentYear}`;
+    
+    const nextBtn = document.createElement('button');
+    nextBtn.innerHTML = '▶';
+    nextBtn.type = 'button';
+    nextBtn.style.cssText = 'background: rgba(255,255,255,0.2); border: none; color: white; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 18px; transition: all 0.3s;';
+    nextBtn.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.3)'; };
+    nextBtn.onmouseout = function() { this.style.background = 'rgba(255,255,255,0.2)'; };
+    nextBtn.onclick = function() {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        updateCalendar();
+    };
+    
+    header.appendChild(prevBtn);
+    header.appendChild(monthYear);
+    header.appendChild(nextBtn);
+    calendar.appendChild(header);
+    
+    // Wochentage
+    const weekdays = document.createElement('div');
+    weekdays.style.cssText = 'display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 10px; font-weight: 600; color: #667eea;';
+    ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].forEach(day => {
+        const dayEl = document.createElement('div');
+        dayEl.textContent = day;
+        dayEl.style.cssText = 'text-align: center; padding: 10px; font-size: 14px;';
+        weekdays.appendChild(dayEl);
+    });
+    calendar.appendChild(weekdays);
+    
+    // Tage
+    const daysGrid = document.createElement('div');
+    daysGrid.style.cssText = 'display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;';
+    
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const startDay = firstDay === 0 ? 6 : firstDay - 1;
+    
+    // Leere Zellen am Anfang
+    for (let i = 0; i < startDay; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.style.cssText = 'padding: 15px; text-align: center;';
+        daysGrid.appendChild(emptyDay);
+    }
+    
+    // Tage des Monats
+    const today = new Date().toISOString().split('T')[0];
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayEl = document.createElement('div');
+        dayEl.textContent = day;
+        dayEl.style.cssText = 'padding: 15px; text-align: center; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-weight: 500;';
+        
+        const isPast = dateStr < today;
+        const isBooked = bookedDates.includes(dateStr);
+        const isBlocked = blockedDates.includes(dateStr);
+        
+        if (isPast || isBooked || isBlocked) {
+            dayEl.style.background = '#f0f0f0';
+            dayEl.style.color = '#ccc';
+            dayEl.style.cursor = 'not-allowed';
+            dayEl.style.textDecoration = 'line-through';
+        } else {
+            dayEl.style.background = 'white';
+            dayEl.style.color = '#333';
+            dayEl.style.border = '2px solid #e0e0e0';
+            
+            dayEl.onmouseover = function() {
+                if (!isPast && !isBooked && !isBlocked) {
+                    this.style.background = '#667eea';
+                    this.style.color = 'white';
+                    this.style.transform = 'scale(1.05)';
+                }
+            };
+            
+            dayEl.onmouseout = function() {
+                if (!isPast && !isBooked && !isBlocked) {
+                    if (dateStr === selectedArrival || dateStr === selectedDeparture) {
+                        this.style.background = '#667eea';
+                        this.style.color = 'white';
+                    } else {
+                        this.style.background = 'white';
+                        this.style.color = '#333';
+                    }
+                    this.style.transform = 'scale(1)';
+                }
+            };
+            
+            dayEl.onclick = function() {
+                selectDate(dateStr);
+            };
+        }
+        
+        // Markiere ausgewählte Daten
+        if (dateStr === selectedArrival || dateStr === selectedDeparture) {
+            dayEl.style.background = '#667eea';
+            dayEl.style.color = 'white';
+            dayEl.style.border = '2px solid #667eea';
+        }
+        
+        daysGrid.appendChild(dayEl);
+    }
+    
+    calendar.appendChild(daysGrid);
+    
+    // Legende
+    const legend = document.createElement('div');
+    legend.style.cssText = 'display: flex; gap: 20px; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; flex-wrap: wrap; justify-content: center; font-size: 13px;';
+    legend.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 20px; height: 20px; background: white; border: 2px solid #e0e0e0; border-radius: 4px;"></div>
+            <span>Disponible</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 20px; height: 20px; background: #667eea; border-radius: 4px;"></div>
+            <span>Sélectionné</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 20px; height: 20px; background: #f0f0f0; border-radius: 4px;"></div>
+            <span>Réservé / Bloqué</span>
+        </div>
+    `;
+    calendar.appendChild(legend);
+}
+
+// Datum auswählen
+function selectDate(dateStr) {
+    if (!selectedArrival || (selectedArrival && selectedDeparture)) {
+        // Neue Auswahl starten
+        selectedArrival = dateStr;
+        selectedDeparture = null;
+        document.getElementById('arrivalDate').value = dateStr;
+        document.getElementById('departureDate').value = '';
+    } else if (selectedArrival && !selectedDeparture) {
+        // Abreise auswählen
+        if (dateStr > selectedArrival) {
+            selectedDeparture = dateStr;
+            document.getElementById('departureDate').value = dateStr;
+            calculateNights();
+        } else {
+            // Wenn früheres Datum gewählt, neu starten
+            selectedArrival = dateStr;
+            selectedDeparture = null;
+            document.getElementById('arrivalDate').value = dateStr;
+            document.getElementById('departureDate').value = '';
+        }
+    }
+    
+    updateCalendar();
+}
+
+// Nächte berechnen
+function calculateNights() {
+    const arrival = document.getElementById('arrivalDate').value;
+    const departure = document.getElementById('departureDate').value;
+    
+    if (arrival && departure) {
+        const start = new Date(arrival);
+        const end = new Date(departure);
+        const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+        
+        if (nights > 0) {
+            document.getElementById('numNights').value = nights;
+            calculatePrice();
+        }
+    }
+}
+
+// Preis berechnen
+async function calculatePrice() {
+    const nights = parseInt(document.getElementById('numNights').value) || 0;
+    
+    if (nights <= 0) {
+        document.getElementById('totalPrice').value = '0';
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}?action=getSettings`);
+        const settings = await response.json();
+        
+        const pricePerNight = parseFloat(settings.pricePerNight) || 89;
+        const discount7 = parseFloat(settings.discount7nights) || 10;
+        const discount14 = parseFloat(settings.discount14nights) || 15;
+        
+        let total = nights * pricePerNight;
+        
+        // Rabatt anwenden
+        if (nights >= 14) {
+            total = total * (1 - discount14 / 100);
+        } else if (nights >= 7) {
+            total = total * (1 - discount7 / 100);
+        }
+        
+        document.getElementById('totalPrice').value = Math.round(total);
+        
+    } catch (error) {
+        console.error('Error calculating price:', error);
+        document.getElementById('totalPrice').value = nights * 89;
+    }
+}
+
+// Notification anzeigen
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        background: ${type === 'error' ? '#ff4444' : type === 'success' ? '#00C851' : '#667eea'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 10000;
+        font-weight: 600;
+        animation: slideIn 0.3s ease-out;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Beim Laden der Seite
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing calendar...');
+    loadCalendar();
+});
+
+    
 </script>
 
 
+
+
+                        
                         
 
 
