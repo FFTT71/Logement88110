@@ -580,6 +580,115 @@
                 font-size: 11px !important;
             }
         }
+
+/* ========================================
+   GALERIE MIT HAUPTBILD + 4 THUMBNAILS
+   ======================================== */
+
+.gallery-main-image {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.gallery-main-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.gallery-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.gallery-thumb-item {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.gallery-thumb-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.gallery-thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* "Weitere Bilder" Overlay */
+.gallery-more-button {
+    position: relative;
+}
+
+.more-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.gallery-more-button:hover .more-overlay {
+    background: rgba(102, 126, 234, 0.9);
+}
+
+.more-text {
+    color: white;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gallery-main-image {
+        height: 250px;
+    }
+    
+    .gallery-thumbnails {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .more-text span:first-child {
+        font-size: 24px !important;
+    }
+    
+    .more-text span:last-child {
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-main-image {
+        height: 200px;
+    }
+    
+    .gallery-thumbnails {
+        gap: 5px;
+    }
+}
+
+        
     </style>
 </head>
 
@@ -645,66 +754,51 @@
         <div class="main-grid">
             <div>
                 <div class="card">
-                    <h2>📸 Photos</h2>
-                    <div class="gallery">
-                        <!-- Hauptbild -->
-                        <div class="gallery-main" onclick="openLightbox(0)">
-                            <img src="images/Cover.jpg" 
-                                 alt="Appartement" 
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
-                                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);font-size:80px;color:white;border-radius:10px;\'>🏠</div>';">
-                        </div>
-                        
-                        <!-- Chambre -->
-                        <div class="gallery-thumb" onclick="openLightbox(1)">
-                            <img src="images/CH_1.jpg" 
-                                 alt="Chambre" 
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
-                                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:50px;color:#666;border-radius:10px;\'>🛏️</div>';">
-                        </div>
-
-                        <!-- Chambre -->
-                        <div class="gallery-thumb" onclick="openLightbox(1)">
-                            <img src="images/CH_2.jpg" 
-                                 alt="Chambre" 
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
-                                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:50px;color:#666;border-radius:10px;\'>🛏️</div>';">
-                        </div>
-
-                        <!-- Chambre -->
-                        <div class="gallery-thumb" onclick="openLightbox(1)">
-                            <img src="images/CH_3.jpg" 
-                                 alt="Chambre" 
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
-                                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:50px;color:#666;border-radius:10px;\'>🛏️</div>';">
-                        </div>
-
-                        <!-- Chambre -->
-                        <div class="gallery-thumb" onclick="openLightbox(1)">
-                            <img src="images/CH_4.jpg" 
-                                 alt="Chambre" 
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
-                                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:50px;color:#666;border-radius:10px;\'>🛏️</div>';">
-                        </div>
-
-                        <!-- Chambre -->
-                        <div class="gallery-thumb" onclick="openLightbox(1)">
-                            <img src="images/CH_5.jpg" 
-                                 alt="Chambre" 
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
-                                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:50px;color:#666;border-radius:10px;\'>🛏️</div>';">
-                        </div>
-
-                        <!-- Thumbnail 6 -->
-                        <div class="gallery-thumb" onclick="openLightbox(1)">
-                            <img src="images/CH_6.jpg" 
-                                 alt="Chambre" 
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
-                                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:50px;color:#666;border-radius:10px;\'>🛏️</div>';">
-                        </div>
-                        
-                    </div>
+    <h2>📸 Photos</h2>
+    
+    <!-- Hauptbild -->
+    <div class="gallery-main-image" onclick="openLightbox(0)">
+        <img src="images/Cover.jpg" 
+             alt="Appartement principal" 
+             style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;"
+             onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);font-size:80px;color:white;border-radius:12px;\'>🏠</div>';">
+    </div>
+    
+    <!-- 4 kleine Bilder -->
+    <div class="gallery-thumbnails">
+        <div class="gallery-thumb-item" onclick="openLightbox(1)">
+            <img src="images/CH_1.jpg" 
+                 alt="Chambre" 
+                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:40px;color:#666;border-radius:8px;\'>🛏️</div>';">
+        </div>
+        
+        <div class="gallery-thumb-item" onclick="openLightbox(2)">
+            <img src="images/CH_2.jpg" 
+                 alt="Salon" 
+                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:40px;color:#666;border-radius:8px;\'>🛋️</div>';">
+        </div>
+        
+        <div class="gallery-thumb-item" onclick="openLightbox(3)">
+            <img src="images/CH_3.jpg" 
+                 alt="Cuisine" 
+                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:40px;color:#666;border-radius:8px;\'>🍳</div>';">
+        </div>
+        
+        <div class="gallery-thumb-item gallery-more-button" onclick="openLightbox(4)">
+            <img src="images/CH_4.jpg" 
+                 alt="Salle de bain" 
+                 style="filter: brightness(0.6);"
+                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:40px;color:#666;border-radius:8px;\'>🚿</div>';">
+            <div class="more-overlay">
+                <div class="more-text">
+                    <span style="font-size: 32px; font-weight: 700; display: block; margin-bottom: 5px;">+<span id="remaining-photos">16</span></span>
+                    <span style="font-size: 14px; font-weight: 600;">Voir plus de photos</span>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
                 
                 <div class="card">
                     <h2>📝 Description</h2>
@@ -1886,36 +1980,98 @@
     </div>
 
     <script>
-    const galleryImages = [
-        {
-            src: 'images/Cover.jpg',
-            alt: 'Appartement'
-        },
-        {
-            src: 'images/CH_1.jpg',
-            alt: 'Chambre'
-        },
-        {
-            src: 'images/CH_2.jpg',
-            alt: 'Chambre'
-        },
-        {
-            src: 'images/CH_3.jpg',
-            alt: 'Chambre'
-        },
-        {
-            src: 'images/CH_4.jpg',
-            alt: 'Chambre'
-        },
-        {
-            src: 'images/CH_5.jpg',
-            alt: 'Chambre'
-        },
-        {
-            src: 'images/CH_6.jpg',
-            alt: 'Chambre'
-        }
-    ];
+    // Array mit allen Bildern
+const galleryImages = [
+    {
+        src: 'images/Cover.jpg',
+        alt: 'Appartement principal'
+    },
+    {
+        src: 'images/CH_1.jpg',
+        alt: 'Chambre 1'
+    },
+    {
+        src: 'images/Salon_1.jpg',
+        alt: 'Salon'
+    },
+    {
+        src: 'images/Cuisine.jpg',
+        alt: 'Cuisine'
+    },
+    {
+        src: 'images/SDB.jpg',
+        alt: 'Salle de bain'
+    },
+    {
+        src: 'images/CH_2.jpg',
+        alt: 'Chambre 2'
+    },
+    {
+        src: 'images/Salon_2.jpg',
+        alt: 'Salon 2'
+    },
+    {
+        src: 'images/Exterieur_1.jpg',
+        alt: 'Extérieur'
+    },
+    {
+        src: 'images/Exterieur_2.jpg',
+        alt: 'Jardin'
+    },
+    {
+        src: 'images/Terrasse.jpg',
+        alt: 'Terrasse'
+    },
+    {
+        src: 'images/Vue_1.jpg',
+        alt: 'Vue'
+    },
+    {
+        src: 'images/Vue_2.jpg',
+        alt: 'Vue montagne'
+    },
+    {
+        src: 'images/Entree.jpg',
+        alt: 'Entrée'
+    },
+    {
+        src: 'images/Couloir.jpg',
+        alt: 'Couloir'
+    },
+    {
+        src: 'images/Detail_1.jpg',
+        alt: 'Détail'
+    },
+    {
+        src: 'images/Detail_2.jpg',
+        alt: 'Détail'
+    },
+    {
+        src: 'images/Nuit.jpg',
+        alt: 'Vue de nuit'
+    },
+    {
+        src: 'images/Hiver.jpg',
+        alt: 'En hiver'
+    },
+    {
+        src: 'images/Ete.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/Automne.jpg',
+        alt: 'En automne'
+    }
+];
+
+// Automatisch "Weitere XX Bilder" berechnen
+document.addEventListener('DOMContentLoaded', function() {
+    const remainingPhotos = galleryImages.length - 5; // 5 = 1 Hauptbild + 4 Thumbnails
+    const remainingElement = document.getElementById('remaining-photos');
+    if (remainingElement && remainingPhotos > 0) {
+        remainingElement.textContent = remainingPhotos;
+    }
+});
 
     let currentImageIndex = 0;
 
