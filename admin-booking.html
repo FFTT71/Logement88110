@@ -947,16 +947,19 @@
                 showMessage('Erreur lors de la mise à jour', 'error');
             }
         }
-        
-        async function deleteBooking(id) {
-    if (!confirm('Möchten Sie diese Buchung wirklich stornieren?\n\nEine Stornierungsemail wird an den Gast gesendet.')) {
+
+async function deleteBooking(id) {
+    if (!confirm('Voulez-vous vraiment annuler cette réservation ?\n\nUn email d\'annulation sera envoyé au client.')) {
         return;
     }
     
-    const reason = prompt('Grund für die Stornierung:', 'Die Anzahlung wurde nicht innerhalb der vorgegebenen Frist überwiesen.');
+    const reason = prompt(
+        'Motif de l\'annulation :',
+        'L\'acompte n\'a pas été reçu dans les délais impartis.'
+    );
     
     if (!reason) {
-        alert('Stornierung abgebrochen - kein Grund angegeben.');
+        alert('Annulation abandonnée - aucun motif fourni.');
         return;
     }
     
@@ -975,20 +978,21 @@
         const result = await response.json();
         
         if (result.success) {
-            showNotification('Buchung storniert und Email gesendet!', 'success');
+            showNotification('Réservation annulée et email envoyé !', 'success');
             await loadBookings();
         } else {
-            showNotification('Fehler: ' + result.message, 'error');
+            showNotification('Erreur : ' + result.message, 'error');
         }
         
     } catch (error) {
-        console.error('Error:', error);
-        showNotification('Fehler beim Stornieren: ' + error.message, 'error');
+        console.error('Erreur:', error);
+        showNotification('Erreur lors de l\'annulation : ' + error.message, 'error');
     } finally {
         showLoading(false);
     }
 }
 
+        
         function contactGuest(email, name) {
             const subject = encodeURIComponent(`Votre réservation - La maison du Nid Vosgien`);
             const body = encodeURIComponent(`Bonjour ${name},\n\n`);
