@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appartement Lac Léman - Réservation</title>
+    <!-- +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+     |                                                                                         S T Y L E                                                                                                              |
+     +----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+ -->
     <style>
         * {
             margin: 0;
@@ -65,48 +68,48 @@
             margin-bottom: 20px;
             font-size: 24px;
         }
-        
-        .gallery {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-    }
-    
-    .gallery-main {
-        grid-column: 1 / -1;
-        height: 400px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.3s;
-    }
-    
-    .gallery-main:hover {
-        transform: scale(1.02);
-    }
-    
-    .gallery-thumb {
-        height: 180px;
-        background: #e0e0e0;
-        border-radius: 10px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.3s;
-    }
-    
-    .gallery-thumb:hover {
-        transform: scale(1.05);
-    }
-    
-    .gallery img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
 
+       /* 
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
         
+        .gallery-main {
+            grid-column: 1 / -1;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .gallery-main:hover {
+            transform: scale(1.02);
+        }
+        
+        .gallery-thumb {
+            height: 80px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .gallery-thumb:hover {
+            transform: scale(1.05);
+        }
+        
+        .gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        */
         .features {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -399,263 +402,353 @@
             color: #666;
         }
 
+        /* MOBILE OPTIMIERUNG FÜR LIGHTBOX */
+        @media (max-width: 768px) {
+            #lightbox > div {
+                font-size: 40px !important;
+                width: 60px !important;
+                height: 60px !important;
+                padding: 15px !important;
+            }
+            
+            #lightbox > div:nth-child(2) {
+                left: 10px !important;
+            }
+            
+            #lightbox > div:nth-child(3) {
+                right: 10px !important;
+            }
+            
+            #lightbox > span {
+                font-size: 40px !important;
+                right: 20px !important;
+                top: 10px !important;
+            }
+            
+            #image-counter {
+                font-size: 14px !important;
+                bottom: 15px !important;
+                padding: 8px 15px !important;
+            }
+            
+            #lightbox-img {
+                max-width: 95% !important;
+                max-height: 80% !important;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            
+            .gallery-main {
+                grid-column: 1 / -1 !important;
+                height: 250px !important;
+            }
+            
+            .gallery-thumb {
+                height: 120px !important;
+            }
+        }
 
-     /* ========================================
-   MOBILE OPTIMIERUNG FÜR LIGHTBOX
-   ======================================== */
+        @media (max-width: 480px) {
+            #lightbox > div {
+                font-size: 30px !important;
+                width: 50px !important;
+                height: 50px !important;
+                padding: 10px !important;
+            }
+            
+            #lightbox > div:nth-child(2) {
+                left: 5px !important;
+            }
+            
+            #lightbox > div:nth-child(3) {
+                right: 5px !important;
+            }
+            
+            #lightbox > span {
+                font-size: 35px !important;
+                right: 15px !important;
+                top: 10px !important;
+            }
+            
+            #image-counter {
+                font-size: 12px !important;
+                bottom: 10px !important;
+                padding: 6px 12px !important;
+            }
+            
+            #lightbox-img {
+                max-width: 98% !important;
+                max-height: 75% !important;
+            }
+            
+            .gallery-main {
+                height: 200px !important;
+            }
+            
+            .gallery-thumb {
+                height: 100px !important;
+            }
+        }
 
-@media (max-width: 768px) {
-    /* Lightbox Pfeile kleiner */
-    #lightbox > div {
-        font-size: 40px !important;
-        width: 60px !important;
-        height: 60px !important;
-        padding: 15px !important;
-    }
-    
-    /* Linker Pfeil */
-    #lightbox > div:nth-child(2) {
-        left: 10px !important;
-    }
-    
-    /* Rechter Pfeil */
-    #lightbox > div:nth-child(3) {
-        right: 10px !important;
-    }
-    
-    /* Schließen-Button */
-    #lightbox > span {
-        font-size: 40px !important;
-        right: 20px !important;
-        top: 10px !important;
-    }
-    
-    /* Bild-Zähler */
-    #image-counter {
-        font-size: 14px !important;
-        bottom: 15px !important;
-        padding: 8px 15px !important;
-    }
-    
-    /* Bild im Lightbox */
-    #lightbox-img {
-        max-width: 95% !important;
-        max-height: 80% !important;
-    }
-    
-    /* Galerie-Layout */
-    .gallery {
-        grid-template-columns: 1fr 1fr !important;
-    }
-    
-    .gallery-main {
-        grid-column: 1 / -1 !important;
-        height: 250px !important;
-    }
-    
-    .gallery-thumb {
-        height: 120px !important;
-    }
-}
+        /* HEADER RESPONSIVE */
+        @media (max-width: 1024px) {
+            .header > div {
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+            
+            .header img[alt="La maison du Nid Vosgien"] {
+                height: 140px !important;
+            }
+            
+            .header #qr-code,
+            .header img[alt="Propriétaire"] {
+                width: 120px !important;
+                height: 120px !important;
+            }
+        }
 
-@media (max-width: 480px) {
-    /* Sehr kleine Bildschirme */
-    #lightbox > div {
-        font-size: 30px !important;
-        width: 50px !important;
-        height: 50px !important;
-        padding: 10px !important;
-    }
-    
-    #lightbox > div:nth-child(2) {
-        left: 5px !important;
-    }
-    
-    #lightbox > div:nth-child(3) {
-        right: 5px !important;
-    }
-    
-    #lightbox > span {
-        font-size: 35px !important;
-        right: 15px !important;
-        top: 10px !important;
-    }
-    
-    #image-counter {
-        font-size: 12px !important;
-        bottom: 10px !important;
-        padding: 6px 12px !important;
-    }
-    
-    #lightbox-img {
-        max-width: 98% !important;
-        max-height: 75% !important;
-    }
-    
-    .gallery-main {
-        height: 200px !important;
-    }
-    
-    .gallery-thumb {
-        height: 100px !important;
-    }
-}
+        @media (max-width: 768px) {
+            .header > div {
+                padding: 15px !important;
+            }
+            
+            .header img[alt="La maison du Nid Vosgien"] {
+                height: 100px !important;
+            }
+            
+            .header #qr-code,
+            .header img[alt="Propriétaire"] {
+                width: 100px !important;
+                height: 100px !important;
+            }
+            
+            #toggle-features-btn {
+                font-size: 14px !important;
+                padding: 12px !important;
+            }
+            
+            #toggle-arrow {
+                font-size: 18px !important;
+            }
+            
+            .features {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .feature-item {
+                padding: 12px !important;
+            }
+            
+            .feature-icon {
+                font-size: 20px !important;
+            }
+        }
 
-
-   /* ========================================
-   HEADER RESPONSIVE
-   ======================================== */
-
-@media (max-width: 1024px) {
-    .header > div {
-        flex-direction: column !important;
-        gap: 20px !important;
-    }
-    
-    .header img[alt="La maison du Nid Vosgien"] {
-        height: 140px !important;
-    }
-    
-    .header #qr-code,
-    .header img[alt="Propriétaire"] {
-        width: 120px !important;
-        height: 120px !important;
-    }
-}
-
-@media (max-width: 768px) {
-    .header > div {
-        padding: 15px !important;
-    }
-    
-    .header img[alt="La maison du Nid Vosgien"] {
-        height: 100px !important;
-    }
-    
-    .header #qr-code,
-    .header img[alt="Propriétaire"] {
-        width: 100px !important;
-        height: 100px !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .header img[alt="La maison du Nid Vosgien"] {
-        height: 80px !important;
-    }
-    
-    .header #qr-code,
-    .header img[alt="Propriétaire"] {
-        width: 80px !important;
-        height: 80px !important;
-    }
-    
-    .header p {
-        font-size: 11px !important;
-    }
-}
-
-/* Toggle Button Responsive */
-@media (max-width: 768px) {
-    #toggle-features-btn {
-        font-size: 14px !important;
-        padding: 12px !important;
-    }
-    
-    #toggle-arrow {
-        font-size: 18px !important;
-    }
-}
-
-@media (max-width: 768px) {
-    .features {
-        grid-template-columns: 1fr !important;
-    }
-    
-    .feature-item {
-        padding: 12px !important;
-    }
-    
-    .feature-icon {
-        font-size: 20px !important;
-    }
-}
+        @media (max-width: 480px) {
+            .header img[alt="La maison du Nid Vosgien"] {
+                height: 80px !important;
+            }
+            
+            .header #qr-code,
+            .header img[alt="Propriétaire"] {
+                width: 80px !important;
+                height: 80px !important;
+            }
+            
+            .header p {
+                font-size: 11px !important;
+            }
+        }
 
         /* Plattform-Links Responsive */
+        @media (max-width: 768px) {
+            .card a[target="_blank"] {
+                font-size: 14px !important;
+            }
+            
+            .card a[target="_blank"] > span {
+                font-size: 24px !important;
+            }
+            
+            .card a[target="_blank"] > div > div:first-child {
+                font-size: 14px !important;
+            }
+            
+            .card a[target="_blank"] > div > div:last-child {
+                font-size: 11px !important;
+            }
+        }
+
+/* ========================================
+   GALERIE MIT HAUPTBILD + 4 THUMBNAILS
+   ======================================== */
+
+.gallery-main-image {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.gallery-main-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.gallery-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.gallery-thumb-item {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.gallery-thumb-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.gallery-thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* "Weitere Bilder" Overlay */
+.gallery-more-button {
+    position: relative;
+}
+
+.more-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.gallery-more-button:hover .more-overlay {
+    background: rgba(102, 126, 234, 0.9);
+}
+
+.more-text {
+    color: white;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .card a[target="_blank"] {
-        font-size: 14px !important;
+    .gallery-main-image {
+        height: 250px;
     }
     
-    .card a[target="_blank"] > span {
+    .gallery-thumbnails {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .more-text span:first-child {
         font-size: 24px !important;
     }
     
-    .card a[target="_blank"] > div > div:first-child {
-        font-size: 14px !important;
+    .more-text span:last-child {
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-main-image {
+        height: 200px;
     }
     
-    .card a[target="_blank"] > div > div:last-child {
-        font-size: 11px !important;
+    .gallery-thumbnails {
+        gap: 5px;
     }
 }
 
         
-        
     </style>
 </head>
+
+<!-- +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+     |                                                                                        B O D Y                                                                                                             |
+     +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+ -->
 <body>
     <div class="header">
-    <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 20px; gap: 30px; flex-wrap: wrap;">
-        
-        <!-- LINKS: QR-Code -->
-        <div style="flex: 0 0 auto; text-align: center;">
-            <div style="background: white; padding: 15px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); display: inline-block;">
-                <img id="qr-code" 
-                     src="" 
-                     alt="QR Code" 
-                     style="width: 80px; height: 80px; display: block;">
-                <p style="margin: 10px 0 0 0; font-size: 12px; color: #333; font-weight: 600;">
-                    Pour partager
-                </p>
+        <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 20px; gap: 30px; flex-wrap: wrap;">
+            
+            <!-- LINKS: QR-Code -->
+            <div style="flex: 0 0 auto; text-align: center;">
+                <div style="background: white; padding: 15px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); display: inline-block;">
+                    <img id="qr-code" 
+                         src="" 
+                         alt="QR Code" 
+                         style="width: 80px; height: 80px; display: block;">
+                    <p style="margin: 10px 0 0 0; font-size: 12px; color: #333; font-weight: 600;">
+                        Pour partager
+                    </p>
+                </div>
             </div>
-        </div>
-        
-        <!-- MITTE: Logo -->
-        <div style="flex: 1 1 auto; text-align: center; min-width: 200px;">
-            <img src="images/Logo.png" 
-                 alt="La maison du Nid Vosgien" 
-                 style="height: 150px; width: auto; border-radius: 15px; background: white; padding: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); max-width: 100%;"
-                 onerror="this.style.display='none';">
-        </div>
-        
-        <!-- RECHTS: Besitzer-Foto -->
-        <div style="flex: 0 0 auto; text-align: center;">
-            <div style="background: white; padding: 10px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); display: inline-block;">
-                <img src="https://fftt71.github.io/Logement88110/images/owner.jpg" 
-                     alt="Propriétaire" 
-                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; display: block;"
-                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22150%22 height=%22150%22/%3E%3Ctext fill=%22%23666%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2260%22%3E👤%3C/text%3E%3C/svg%3E';">
-                <p style="margin: 10px 0 0 0; font-size: 14px; color: #333; font-weight: 600;">
-                    Votre hôte
-                </p>
+            
+            <!-- MITTE: Logo -->
+            <div style="flex: 1 1 auto; text-align: center; min-width: 200px;">
+                <img src="images/Logo.png" 
+                     alt="La maison du Nid Vosgien" 
+                     style="height: 150px; width: auto; border-radius: 15px; background: white; padding: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); max-width: 100%;"
+                     onerror="this.style.display='none';">
             </div>
+            
+            <!-- RECHTS: Besitzer-Foto -->
+            <div style="flex: 0 0 auto; text-align: center;">
+                <div style="background: white; padding: 10px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); display: inline-block;">
+                    <img src="https://fftt71.github.io/Logement88110/images/owner.jpg" 
+                         alt="Propriétaire" 
+                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; display: block;"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22150%22 height=%22150%22/%3E%3Ctext fill=%22%23666%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2260%22%3E👤%3C/text%3E%3C/svg%3E';">
+                    <p style="margin: 10px 0 0 0; font-size: 10px; color: #333; font-weight: 600;">
+                        Votre hôte:
+                        Farshid
+                    </p>
+                </div>
+            </div>
+            
         </div>
-        
     </div>
-</div>
+<!-- +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+     |                                                                                         S C R I P T                                                                                                        |
+     +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+ -->
+    <script>
+    // QR-Code automatisch generieren
+    window.addEventListener('DOMContentLoaded', function() {
+        const currentUrl = window.location.href;
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(currentUrl)}`;
+        document.getElementById('qr-code').src = qrCodeUrl;
+    });
+    </script>
 
-<script>
-// QR-Code automatisch generieren
-window.addEventListener('DOMContentLoaded', function() {
-    const currentUrl = window.location.href;
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(currentUrl)}`;
-    document.getElementById('qr-code').src = qrCodeUrl;
-});
-</script>
-
-
-    
     <div class="container">
         <div id="messageBox" class="message"></div>
         
@@ -663,24 +756,47 @@ window.addEventListener('DOMContentLoaded', function() {
             <div>
                 <div class="card">
     <h2>📸 Photos</h2>
-    <div class="gallery">
-        <!-- Hauptbild -->
-        <div class="gallery-main" onclick="openLightbox(0)">
-            <img src="images/Cover.jpg" 
-                 alt="Appartement" 
-                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
-                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);font-size:80px;color:white;border-radius:10px;\'>🏠</div>';">
-        </div>
-        
-        <!-- Thumbnail 1 -->
-        <div class="gallery-thumb" onclick="openLightbox(1)">
+    
+    <!-- Hauptbild -->
+    <div class="gallery-main-image" onclick="openLightbox(0)">
+        <img src="images/Cover.jpg" 
+             alt="Appartement principal" 
+             style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;"
+             onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);font-size:80px;color:white;border-radius:12px;\'>🏠</div>';">
+    </div>
+    
+    <!-- 4 kleine Bilder -->
+    <div class="gallery-thumbnails">
+        <div class="gallery-thumb-item" onclick="openLightbox(1)">
             <img src="images/CH_1.jpg" 
                  alt="Chambre" 
-                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
-                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:50px;color:#666;border-radius:10px;\'>🛏️</div>';">
+                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:40px;color:#666;border-radius:8px;\'>🛏️</div>';">
         </div>
         
+        <div class="gallery-thumb-item" onclick="openLightbox(2)">
+            <img src="images/CH_2.jpg" 
+                 alt="Salon" 
+                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:40px;color:#666;border-radius:8px;\'>🛋️</div>';">
+        </div>
         
+        <div class="gallery-thumb-item" onclick="openLightbox(3)">
+            <img src="images/CH_3.jpg" 
+                 alt="Cuisine" 
+                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:40px;color:#666;border-radius:8px;\'>🍳</div>';">
+        </div>
+        
+        <div class="gallery-thumb-item gallery-more-button" onclick="openLightbox(4)">
+            <img src="images/CH_4.jpg" 
+                 alt="Salle de bain" 
+                 style="filter: brightness(0.6);"
+                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#e0e0e0;font-size:40px;color:#666;border-radius:8px;\'>🚿</div>';">
+            <div class="more-overlay">
+                <div class="more-text">
+                    <span style="font-size: 32px; font-weight: 700; display: block; margin-bottom: 5px;">+<span id="remaining-photos">16</span></span>
+                    <!-- <span style="font-size: 14px; font-weight: 600;">Voir plus de photos</span> -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -688,204 +804,194 @@ window.addEventListener('DOMContentLoaded', function() {
                 <div class="card">
                     <h2>📝 Description</h2>
                     <p style="line-height: 1.6; color: #555;">
-                        Magnifique maison situé au cœur des Vosges, à quelques pas du lac de Celles-sur-Plaine et lac du Pierre-Percée dans l’un des endroits les plus paisibles.
+                        Magnifique maison situé au cœur des Vosges, à quelques pas du lac de Celles-sur-Plaine et lac du Pierre-Percée dans l'un des endroits les plus paisibles.
                         Ici, vous vous réveillez au chant des oiseaux et profitez le soir du coucher de soleil sur les montagnes.
                         Idéale pour des vacances en famille, des week ends romantiques, des aventures en plein air, des workations au calme, ou simplement pour celles et ceux qui souhaitent déconnecter.
                         Parfaite pour tous ceux qui recherchent détente, air pur et un cadre pittoresque.
                     </p>
                     
                     <h3 style="margin-top: 20px; margin-bottom: 15px; color: #667eea;">✨ Équipements</h3>
-                    <!-- Ersten 6 Equipments (immer sichtbar) -->
-    <div class="features">
-        <div class="feature-item">
-            <span class="feature-icon">📶</span>
-            <span>WiFi gratuit</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🍳</span>
-            <span>Cuisine équipée</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🅿️</span>
-            <span>Parking gratuit</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">📺</span>
-            <span>TV écran plat</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🍽️</span>
-            <span>Lave-vaisselle</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🧺</span>
-            <span>Lave-linge</span>
-        </div>
-    </div>
-    
-    <!-- Weitere Equipments (versteckt) -->
-    <div id="more-features" class="features" style="display: none; margin-top: 15px;">
-        <!-- Sicherheit -->
-        <div class="feature-item">
-            <span class="feature-icon">🚨</span>
-            <span>Trousse de premiers secours</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🧯</span>
-            <span>Extincteur</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">💨</span>
-            <span>Détecteur de fumée</span>
-        </div>
-        
-        <!-- Außenbereich -->
-        <div class="feature-item">
-            <span class="feature-icon">🍽️</span>
-            <span>Espace repas en plein air</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🪑</span>
-            <span>Mobilier de jardin</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🔥</span>
-            <span>Barbecue</span>
-        </div>
-        
-        <!-- Küche -->
-        <div class="feature-item">
-            <span class="feature-icon">❄️</span>
-            <span>Réfrigérateur</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🧊</span>
-            <span>Congélateur</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🔥</span>
-            <span>Cuisinière</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">📡</span>
-            <span>Micro-ondes</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">☕</span>
-            <span>Machine à café</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">☕</span>
-            <span>Café</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🫖</span>
-            <span>Bouilloire électrique</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🍞</span>
-            <span>Grille-pain</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🍴</span>
-            <span>Vaisselle et couverts</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🍳</span>
-            <span>Casseroles et poêles</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🧂</span>
-            <span>Huile, sel et poivre</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🍷</span>
-            <span>Verres à vin</span>
-        </div>
-        
-        <!-- Badezimmer -->
-        <div class="feature-item">
-            <span class="feature-icon">💇</span>
-            <span>Sèche-cheveux</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🧴</span>
-            <span>Savon ou gel douche</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🧴</span>
-            <span>Shampoing</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">💧</span>
-            <span>Eau chaude</span>
-        </div>
-        
-        <!-- Allgemein -->
-        <div class="feature-item">
-            <span class="feature-icon">👔</span>
-            <span>Cintres</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🧹</span>
-            <span>Produits de nettoyage</span>
-        </div>
-        <div class="feature-item">
-            <span class="feature-icon">🌡️</span>
-            <span>Chauffage électrique</span>
-        </div>
-    </div>
-    
-    <!-- Toggle Button -->
-    <button id="toggle-features-btn" onclick="toggleFeatures()" style="
-        width: 100%;
-        margin-top: 20px;
-        padding: 15px;
-        background: white;
-        border: 2px solid #667eea;
-        border-radius: 8px;
-        color: #667eea;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-    " onmouseover="this.style.background='#667eea'; this.style.color='white';" onmouseout="this.style.background='white'; this.style.color='#667eea';">
-        <span id="toggle-text">Afficher 24 équipements supplémentaires</span>
-        <span id="toggle-arrow" style="font-size: 20px; transition: transform 0.3s;">▼</span>
-    </button>
-</div>
+                    
+                    <!-- Ersten 6 Equipments -->
+                    <div class="features">
+                        <div class="feature-item">
+                            <span class="feature-icon">📶</span>
+                            <span>WiFi gratuit</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🍳</span>
+                            <span>Cuisine équipée</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🅿️</span>
+                            <span>Parking gratuit</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📺</span>
+                            <span>TV écran plat</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🍽️</span>
+                            <span>Lave-vaisselle</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🧺</span>
+                            <span>Lave-linge</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Weitere Equipments (versteckt) -->
+                    <div id="more-features" class="features" style="display: none; margin-top: 15px;">
+                        <div class="feature-item">
+                            <span class="feature-icon">🚨</span>
+                            <span>Trousse de premiers secours</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🧯</span>
+                            <span>Extincteur</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">💨</span>
+                            <span>Détecteur de fumée</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🍽️</span>
+                            <span>Espace repas en plein air</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🪑</span>
+                            <span>Mobilier de jardin</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔥</span>
+                            <span>Barbecue</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">❄️</span>
+                            <span>Réfrigérateur</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🧊</span>
+                            <span>Congélateur</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔥</span>
+                            <span>Cuisinière</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📡</span>
+                            <span>Micro-ondes</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">☕</span>
+                            <span>Machine à café</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">☕</span>
+                            <span>Café</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🫖</span>
+                            <span>Bouilloire électrique</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🍞</span>
+                            <span>Grille-pain</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🍴</span>
+                            <span>Vaisselle et couverts</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🍳</span>
+                            <span>Casseroles et poêles</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🧂</span>
+                            <span>Huile, sel et poivre</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🍷</span>
+                            <span>Verres à vin</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">💇</span>
+                            <span>Sèche-cheveux</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🧴</span>
+                            <span>Savon ou gel douche</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🧴</span>
+                            <span>Shampoing</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">💧</span>
+                            <span>Eau chaude</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">👔</span>
+                            <span>Cintres</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🧹</span>
+                            <span>Produits de nettoyage</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🌡️</span>
+                            <span>Chauffage électrique</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Toggle Button -->
+                    <button id="toggle-features-btn" onclick="toggleFeatures()" style="
+                        width: 100%;
+                        margin-top: 20px;
+                        padding: 15px;
+                        background: white;
+                        border: 2px solid #667eea;
+                        border-radius: 8px;
+                        color: #667eea;
+                        font-size: 16px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 10px;
+                    " onmouseover="this.style.background='#667eea'; this.style.color='white';" onmouseout="this.style.background='white'; this.style.color='#667eea';">
+                        <span id="toggle-text">Afficher 24 équipements supplémentaires</span>
+                        <span id="toggle-arrow" style="font-size: 20px; transition: transform 0.3s;">▼</span>
+                    </button>
+                </div>
 
-<script>
-function toggleFeatures() {
-    const moreFeatures = document.getElementById('more-features');
-    const toggleText = document.getElementById('toggle-text');
-    const toggleArrow = document.getElementById('toggle-arrow');
-    
-    if (moreFeatures.style.display === 'none') {
-        // Mehr anzeigen
-        moreFeatures.style.display = 'grid';
-        toggleText.textContent = 'Afficher moins d\'équipements';
-        toggleArrow.textContent = '▲';
-        toggleArrow.style.transform = 'rotate(180deg)';
-    } else {
-        // Weniger anzeigen
-        moreFeatures.style.display = 'none';
-        toggleText.textContent = 'Afficher 24 équipements supplémentaires';
-        toggleArrow.textContent = '▼';
-        toggleArrow.style.transform = 'rotate(0deg)';
-        
-        // Scroll zurück zum Button
-        document.getElementById('toggle-features-btn').scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'nearest' 
-        });
-    }
-}
-</script>                
+                <script>
+                function toggleFeatures() {
+                    const moreFeatures = document.getElementById('more-features');
+                    const toggleText = document.getElementById('toggle-text');
+                    const toggleArrow = document.getElementById('toggle-arrow');
+                    
+                    if (moreFeatures.style.display === 'none') {
+                        moreFeatures.style.display = 'grid';
+                        toggleText.textContent = 'Afficher moins d\'équipements';
+                        toggleArrow.textContent = '▲';
+                        toggleArrow.style.transform = 'rotate(180deg)';
+                    } else {
+                        moreFeatures.style.display = 'none';
+                        toggleText.textContent = 'Afficher 24 équipements supplémentaires';
+                        toggleArrow.textContent = '▼';
+                        toggleArrow.style.transform = 'rotate(0deg)';
+                        
+                        document.getElementById('toggle-features-btn').scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'nearest' 
+                        });
+                    }
+                }
+                </script>
+                
                 <div class="card">
                     <h2>📋 Règlement intérieur</h2>
                     <div class="info-box">
@@ -902,7 +1008,7 @@ function toggleFeatures() {
                             <li>🐕 Animaux non acceptés</li>
                             <li>🎉 Pas de fêtes</li>
                             <li>🕙 Calme après 22h00</li>
-                            <li>👥 Max. nombre de personnes : 4
+                            <li>👥 Max. nombre de personnes : 4</li>
                         </ul>
                     </div>
                 </div>
@@ -915,7 +1021,7 @@ function toggleFeatures() {
                     <div class="info-box">
                         <h4>Comment s'y rendre</h4>
                         <ul>
-                            <li>🚗 En voiture : National N59,  sortie Raon l'Ètape, après D392A</li>
+                            <li>🚗 En voiture : National N59, sortie Raon l'Ètape, après D392A</li>
                             <li>🚂 En train : Gare de Raon l'Ètape (10 min en voiture)</li>
                             <li>✈️ Aéroport : Strasbourg (SXB) (67 km)</li>
                         </ul>
@@ -985,11 +1091,115 @@ function toggleFeatures() {
                             </div>
                         </div>
                         
+                        <!-- Nombre de personnes avec détails -->
                         <div class="form-group">
-                            <label for="numGuests">Nombre de personnes *</label>
-                            <select id="numGuests" required>
-                                <option value="">Chargement...</option>
-                            </select>
+                            <label for="numGuests">👥 Nombre de personnes *</label>
+                            
+                            <!-- Anzeige-Button -->
+                            <div id="guests-display" 
+                                 onclick="toggleGuestsDropdown()" 
+                                 style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; background: white; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s;"
+                                 onmouseover="this.style.borderColor='#667eea';"
+                                 onmouseout="this.style.borderColor='#ddd';">
+                                <span id="guests-summary" style="color: #333; font-weight: 500;">
+                                    1 personne (1 adulte)
+                                </span>
+                                <span id="dropdown-arrow" style="font-size: 20px; transition: transform 0.3s;">▼</span>
+                            </div>
+                            
+                            <!-- Dropdown mit Details -->
+                            <div id="guests-dropdown" style="display: none; margin-top: 10px; padding: 20px; border: 2px solid #667eea; border-radius: 8px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                                
+                                <!-- Adultes -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 16px; color: #333;">Adultes</div>
+                                        <div style="font-size: 13px; color: #666; margin-top: 3px;">18 ans et plus</div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <button type="button" 
+                                                onclick="changeGuests('adults', -1)" 
+                                                style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #667eea; background: white; color: #667eea; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+                                                onmouseover="this.style.background='#667eea'; this.style.color='white';"
+                                                onmouseout="this.style.background='white'; this.style.color='#667eea';">
+                                            −
+                                        </button>
+                                        <span id="adults-count" style="font-weight: 600; font-size: 18px; min-width: 30px; text-align: center;">1</span>
+                                        <button type="button" 
+                                                onclick="changeGuests('adults', 1)" 
+                                                style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #667eea; background: white; color: #667eea; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+                                                onmouseover="this.style.background='#667eea'; this.style.color='white';"
+                                                onmouseout="this.style.background='white'; this.style.color='#667eea';">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Enfants -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 16px; color: #333;">Enfants</div>
+                                        <div style="font-size: 13px; color: #666; margin-top: 3px;">De 2 à 17 ans</div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <button type="button" 
+                                                onclick="changeGuests('children', -1)" 
+                                                style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #667eea; background: white; color: #667eea; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+                                                onmouseover="this.style.background='#667eea'; this.style.color='white';"
+                                                onmouseout="this.style.background='white'; this.style.color='#667eea';">
+                                            −
+                                        </button>
+                                        <span id="children-count" style="font-weight: 600; font-size: 18px; min-width: 30px; text-align: center;">0</span>
+                                        <button type="button" 
+                                                onclick="changeGuests('children', 1)" 
+                                                style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #667eea; background: white; color: #667eea; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+                                                onmouseover="this.style.background='#667eea'; this.style.color='white';"
+                                                onmouseout="this.style.background='white'; this.style.color='#667eea';">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Bébés -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 16px; color: #333;">Bébés</div>
+                                        <div style="font-size: 13px; color: #666; margin-top: 3px;">De 0 à 1 an</div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <button type="button" 
+                                                onclick="changeGuests('babies', -1)" 
+                                                style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #667eea; background: white; color: #667eea; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+                                                onmouseover="this.style.background='#667eea'; this.style.color='white';"
+                                                onmouseout="this.style.background='white'; this.style.color='#667eea';">
+                                            −
+                                        </button>
+                                        <span id="babies-count" style="font-weight: 600; font-size: 18px; min-width: 30px; text-align: center;">0</span>
+                                        <button type="button" 
+                                                onclick="changeGuests('babies', 1)" 
+                                                style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #667eea; background: white; color: #667eea; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;"
+                                                onmouseover="this.style.background='#667eea'; this.style.color='white';"
+                                                onmouseout="this.style.background='white'; this.style.color='#667eea';">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Valider Button -->
+                                <button type="button" 
+                                        onclick="closeGuestsDropdown()" 
+                                        style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s;"
+                                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(102,126,234,0.4)';"
+                                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                    Valider
+                                </button>
+                            </div>
+                            
+                            <!-- Versteckte Input-Felder für Formular-Submit -->
+                            <input type="hidden" id="numGuests" name="numGuests" value="1" required>
+                            <input type="hidden" id="adults" name="adults" value="1">
+                            <input type="hidden" id="children" name="children" value="0">
+                            <input type="hidden" id="babies" name="babies" value="0">
                         </div>
                         
                         <div class="form-group">
@@ -1013,12 +1223,11 @@ function toggleFeatures() {
                         </div>
                         
                         <div class="info-box">
-                          <p style="font-size: 14px;">
-                            💳 <strong>Paiement :</strong> Virement bancaire ou PayPal<br>
-                            ✉️ Vous recevrez une confirmation par email avec les instructions de paiement
-                          </p>
+                            <p style="font-size: 14px;">
+                                💳 <strong>Paiement :</strong> Virement bancaire ou PayPal<br>
+                                ✉️ Vous recevrez une confirmation par email avec les instructions de paiement
+                            </p>
                         </div>
-
                         
                         <button type="submit" class="btn" id="submitBtn">
                             Envoyer la demande
@@ -1027,82 +1236,91 @@ function toggleFeatures() {
                 </div>
             </div>
         </div>
-    </div>
 
- <div class="card" style="margin-top: 30px;">
-    <h2>🌐 Réserver ailleurs</h2>
-    <p style="margin-bottom: 20px; color: #666; font-size: 15px;">
-        Retrouvez-nous également sur :
-    </p>
-    
-    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
-        
-        <!-- Airbnb -->
-        <a href="https://www.airbnb.de/rooms/1657973141602281443?source_impression_id=p3_1784905223_P3RM7U1tlVtDh36e" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           style="flex: 0 0 auto; width: 120px; padding: 20px; background: #FF5A5F; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 90, 95, 0.3);"
-           onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(255, 90, 95, 0.4)';"
-           onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(255, 90, 95, 0.3)';">
-            <div style="font-size: 40px; margin-bottom: 10px;">🏠</div>
-            <div style="font-weight: 700; font-size: 14px;">Airbnb</div>
-        </a>
-        
-        <!-- Booking.com -->
-        <a href="https://www.booking.com/hotel/fr/a-paradise-for-nature-lovers.de.html" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           style="flex: 0 0 auto; width: 120px; padding: 20px; background: #003580; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 53, 128, 0.3);"
-           onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(0, 53, 128, 0.4)';"
-           onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 53, 128, 0.3)';">
-            <div style="font-size: 40px; margin-bottom: 10px;">🏨</div>
-            <div style="font-weight: 700; font-size: 14px;">Booking</div>
-        </a>
-        
-        <!-- Abritel -->
-        <a href="https://www.abritel.fr/location-vacances/p5371514vb?chkin=2026-08-24&chkout=2026-08-27&d1=2026-08-24&d2=2026-08-27&startDate=2026-08-24&endDate=2026-08-27&x_pwa=1&rfrr=HSR&pwa_ts=1784906230914&referrerUrl=aHR0cHM6Ly93d3cuYWJyaXRlbC5mci9Ib3RlbC1TZWFyY2g%3D&useRewards=true&adults=4&regionId=3000039308&destination=Celles-sur-Plaine%2C+Vosges+%28d%C3%A9partement%29%2C+France&destType=MARKET&latLong=48.456274%2C6.949962&searchId=e51ba304-7db0-46c1-934e-f50bda19042c&sort=RECOMMENDED&top_dp=284&top_cur=EUR&userIntent=&selectedRoomType=133369887&selectedRatePlan=0004e95fd8df5d874c99b50b24e0116f94b5&expediaPropertyId=133369887" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           style="flex: 0 0 auto; width: 120px; padding: 20px; background: #0066CC; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);"
-           onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(0, 102, 204, 0.4)';"
-           onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 102, 204, 0.3)';">
-            <div style="font-size: 40px; margin-bottom: 10px;">🏡</div>
-            <div style="font-weight: 700; font-size: 14px;">Abritel</div>
-        </a>
-        
-        <!-- VRBO -->
-        <a href="https://www.vrbo.com/5371514?chkin=2026-09-20&chkout=2026-09-23&d1=2026-09-20&d2=2026-09-23&startDate=2026-09-20&endDate=2026-09-23&x_pwa=1&rfrr=HSR&pwa_ts=1784906387977&referrerUrl=aHR0cHM6Ly93d3cudnJiby5jb20vSG90ZWwtU2VhcmNo&useRewards=false&adults=2&regionId=3000039308&destination=Celles-sur-Plaine%2C+Vosges%2C+France&destType=MARKET&latLong=48.456274%2C6.949962&searchId=41befff4-c3f7-4d58-b999-7d2ab98a9a7e&sort=RECOMMENDED&top_dp=104&top_cur=USD&userIntent=&selectedRoomType=133369887&selectedRatePlan=0004e95fd8df5d874c99b50b24e0116f94b5&expediaPropertyId=133369887" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           style="flex: 0 0 auto; width: 120px; padding: 20px; background: #0066CC; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);"
-           onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(0, 102, 204, 0.4)';"
-           onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 102, 204, 0.3)';">
-            <div style="font-size: 40px; margin-bottom: 10px;">🌴</div>
-            <div style="font-weight: 700; font-size: 14px;">VRBO</div>
-        </a>
-        
-        <!-- Leboncoin -->
-        <a href="https://www.leboncoin.fr/ad/locations_saisonnieres/3227964653" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           style="flex: 0 0 auto; width: 120px; padding: 20px; background: #FF6E14; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 110, 20, 0.3);"
-           onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(255, 110, 20, 0.4)';"
-           onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(255, 110, 20, 0.3)';">
-            <div style="font-size: 40px; margin-bottom: 10px;">🔔</div>
-            <div style="font-weight: 700; font-size: 14px;">Leboncoin</div>
-        </a>
-        
-    </div>
-</div>
+        <div class="card" style="margin-top: 30px;">
+            <h2>🌐 Réserver ailleurs</h2>
+            <p style="margin-bottom: 20px; color: #666; font-size: 15px;">
+                Retrouvez-nous également sur :
+            </p>
+            
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                
+                <!-- Airbnb -->
+                <a href="https://www.airbnb.de/rooms/1657973141602281443?source_impression_id=p3_1784905223_P3RM7U1tlVtDh36e" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="flex: 0 0 auto; width: 120px; padding: 20px; background: #FF5A5F; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 90, 95, 0.3);"
+                   onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(255, 90, 95, 0.4)';"
+                   onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(255, 90, 95, 0.3)';">
+                    <div style="font-size: 40px; margin-bottom: 10px;">🏠</div>
+                    <div style="font-weight: 700; font-size: 14px;">Airbnb</div>
+                </a>
+                
+                <!-- Booking.com -->
+                <a href="https://www.booking.com/hotel/fr/a-paradise-for-nature-lovers.de.html" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="flex: 0 0 auto; width: 120px; padding: 20px; background: #003580; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 53, 128, 0.3);"
+                   onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(0, 53, 128, 0.4)';"
+                   onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 53, 128, 0.3)';">
+                    <div style="font-size: 40px; margin-bottom: 10px;">🏨</div>
+                    <div style="font-weight: 700; font-size: 14px;">Booking</div>
+                </a>
+                
+                <!-- Abritel -->
+                <a href="https://www.abritel.fr/location-vacances/p5371514vb" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="flex: 0 0 auto; width: 120px; padding: 20px; background: #0066CC; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);"
+                   onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(0, 102, 204, 0.4)';"
+                   onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 102, 204, 0.3)';">
+                    <div style="font-size: 40px; margin-bottom: 10px;">🏡</div>
+                    <div style="font-weight: 700; font-size: 14px;">Abritel</div>
+                </a>
+                
+                <!-- VRBO -->
+                <a href="https://www.vrbo.com/5371514" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="flex: 0 0 auto; width: 120px; padding: 20px; background: #0066CC; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);"
+                   onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(0, 102, 204, 0.4)';"
+                   onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 102, 204, 0.3)';">
+                    <div style="font-size: 40px; margin-bottom: 10px;">🌴</div>
+                    <div style="font-weight: 700; font-size: 14px;">VRBO</div>
+                </a>
+                
+                <!-- Leboncoin -->
+                <a href="https://www.leboncoin.fr/ad/locations_saisonnieres/3227964653" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="flex: 0 0 auto; width: 120px; padding: 20px; background: #FF6E14; color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 110, 20, 0.3);"
+                   onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(255, 110, 20, 0.4)';"
+                   onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(255, 110, 20, 0.3)';">
+                    <div style="font-size: 40px; margin-bottom: 10px;">🔔</div>
+                    <div style="font-weight: 700; font-size: 14px;">Leboncoin</div>
+                </a>
 
+                <!-- Holidu -->
+                <a href="https://www.holidu.ch/d/69644463" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="flex: 0 0 auto; width: 120px; padding: 20px; background: linear-gradient(135deg, #00B4D8 0%, #0077B6 100%); color: white; text-decoration: none; border-radius: 15px; text-align: center; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3);"
+                   onmouseover="this.style.transform='translateY(-5px) scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(0, 180, 216, 0.4)';"
+                   onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 180, 216, 0.3)';">
+                    <div style="font-size: 40px; margin-bottom: 10px;">🏖️</div>
+                    <div style="font-weight: 700; font-size: 14px;">Holidu</div>
+                </a>
+            </div>
+        </div>
+    </div>
     
     <div class="footer">
         <p>&copy; 2026 Maison du Nid Vosgien - Tous droits réservés</p>
     </div>
     
     <script>
-        // WICHTIG: IHRE GOOGLE APPS SCRIPT URL HIER EINFÜGEN!
-        const API_URL = 'https://script.google.com/macros/s/AKfycbysOQkznev7o7NJej2ZxPzKp9IRlrxrj31GbdFGtJHdzxrB70iSlH_kMW4JJEHPkNnZYg/exec';
+        // API URL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzx8ZZd17DX9rb1kqhXdUZjQD62uH6G0pY-tsPclwRVeMq5j6C2kV9JPaK8rMLZPzuhUw/exec';
         
         let settings = {};
         let bookedDates = [];
@@ -1110,6 +1328,88 @@ function toggleFeatures() {
         let currentMonth = new Date();
         let selectedStartDate = null;
         let selectedEndDate = null;
+        
+        // ============================================
+        // GÄSTE-SELECTOR
+        // ============================================
+        
+        let guestsData = {
+            adults: 1,
+            children: 0,
+            babies: 0
+        };
+
+        function toggleGuestsDropdown() {
+            const dropdown = document.getElementById('guests-dropdown');
+            const arrow = document.getElementById('dropdown-arrow');
+            
+            if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                dropdown.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                dropdown.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function closeGuestsDropdown() {
+            document.getElementById('guests-dropdown').style.display = 'none';
+            document.getElementById('dropdown-arrow').style.transform = 'rotate(0deg)';
+        }
+
+        function changeGuests(type, change) {
+            if (type === 'adults' && guestsData.adults + change < 1) return;
+            if ((type === 'children' || type === 'babies') && guestsData[type] + change < 0) return;
+            
+            const maxGuests = parseInt(settings.maxGuests) || 10;
+            const totalGuests = guestsData.adults + guestsData.children + guestsData.babies + change;
+            if (totalGuests > maxGuests) {
+                alert(`Maximum ${maxGuests} personnes autorisées`);
+                return;
+            }
+            
+            guestsData[type] += change;
+            updateGuestsDisplay();
+        }
+
+        function updateGuestsDisplay() {
+            document.getElementById('adults-count').textContent = guestsData.adults;
+            document.getElementById('children-count').textContent = guestsData.children;
+            document.getElementById('babies-count').textContent = guestsData.babies;
+            
+            const total = guestsData.adults + guestsData.children + guestsData.babies;
+            
+            document.getElementById('numGuests').value = total;
+            document.getElementById('adults').value = guestsData.adults;
+            document.getElementById('children').value = guestsData.children;
+            document.getElementById('babies').value = guestsData.babies;
+            
+            let summaryParts = [];
+            if (guestsData.adults > 0) summaryParts.push(`${guestsData.adults} adulte${guestsData.adults > 1 ? 's' : ''}`);
+            if (guestsData.children > 0) summaryParts.push(`${guestsData.children} enfant${guestsData.children > 1 ? 's' : ''}`);
+            if (guestsData.babies > 0) summaryParts.push(`${guestsData.babies} bébé${guestsData.babies > 1 ? 's' : ''}`);
+            
+            const summaryText = summaryParts.join(', ');
+            const guestsSummary = document.getElementById('guests-summary');
+            if (guestsSummary) {
+                guestsSummary.innerHTML = `
+                    <span style="color: #667eea; font-weight: 600; font-size: 18px;">${total}</span> 
+                    <span style="color: #333; font-weight: 500;">personne${total > 1 ? 's' : ''}</span>
+                    ${summaryText ? `<span style="color: #999; font-size: 13px; margin-left: 8px;">(${summaryText})</span>` : ''}
+                `;
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('guests-dropdown');
+            const display = document.getElementById('guests-display');
+            
+            if (dropdown && display && dropdown.style.display === 'block') {
+                if (!dropdown.contains(event.target) && !display.contains(event.target)) {
+                    closeGuestsDropdown();
+                }
+            }
+        });
         
         console.log('🚀 Booking system starting...');
         console.log('📡 API URL:', API_URL);
@@ -1122,6 +1422,7 @@ function toggleFeatures() {
                 await loadBookings();
                 await loadBlockedDates();
                 renderCalendar();
+                updateGuestsDisplay();
                 console.log('✅ All data loaded successfully');
             } catch (error) {
                 console.error('❌ Error:', error);
@@ -1130,125 +1431,80 @@ function toggleFeatures() {
         });
         
         async function loadSettings() {
-    console.log('📥 Loading settings...');
-    
-    // DEFAULT WERTE (Fallback)
-    const defaultSettings = {
-        apartmentName: 'Appartement Lac Léman',
-        pricePerNight: '89',
-        minNights: '2',
-        maxGuests: '4',
-        discount7nights: '10',
-        discount14nights: '15',
-        checkInTime: '15:00',
-        checkOutTime: '11:00'
-    };
-    
-    try {
-        const response = await fetch(`${API_URL}?action=getSettings`);
-        
-        if (!response.ok) {
-            console.warn('⚠️ Settings API failed, using defaults');
-            settings = defaultSettings;
-        } else {
-            settings = await response.json();
-            console.log('✅ Settings loaded from API:', settings);
+            console.log('📥 Loading settings...');
             
-            // Merge mit Defaults (falls Werte fehlen)
-            settings = { ...defaultSettings, ...settings };
-        }
-        
-    } catch (error) {
-        console.error('❌ Error loading settings:', error);
-        console.warn('⚠️ Using default settings');
-        settings = defaultSettings;
-    }
-    
-    console.log('📊 Final settings:', settings);
-    
-    // FIX: Zeit-Format korrigieren
-    function formatTime(timeValue) {
-        if (!timeValue) return '';
-        
-        if (typeof timeValue === 'string' && timeValue.includes(':')) {
-            return timeValue;
-        }
-        
-        if (typeof timeValue === 'string' && timeValue.includes('1899')) {
+            const defaultSettings = {
+                apartmentName: 'Appartement Lac Léman',
+                pricePerNight: '89',
+                minNights: '2',
+                maxGuests: '4',
+                discount7nights: '10',
+                discount14nights: '15',
+                checkInTime: '15:00',
+                checkOutTime: '11:00'
+            };
+            
             try {
-                const date = new Date(timeValue);
-                const hours = String(date.getHours()).padStart(2, '0');
-                const minutes = String(date.getMinutes()).padStart(2, '0');
-                return `${hours}:${minutes}`;
-            } catch (e) {
-                return '15:00';
+                const response = await fetch(`${API_URL}?action=getSettings`);
+                
+                if (!response.ok) {
+                    console.warn('⚠️ Settings API failed, using defaults');
+                    settings = defaultSettings;
+                } else {
+                    settings = await response.json();
+                    console.log('✅ Settings loaded from API:', settings);
+                    settings = { ...defaultSettings, ...settings };
+                }
+                
+            } catch (error) {
+                console.error('❌ Error loading settings:', error);
+                console.warn('⚠️ Using default settings');
+                settings = defaultSettings;
+            }
+            
+            console.log('📊 Final settings:', settings);
+            
+            function formatTime(timeValue) {
+                if (!timeValue) return '';
+                
+                if (typeof timeValue === 'string' && timeValue.includes(':')) {
+                    return timeValue;
+                }
+                
+                if (typeof timeValue === 'string' && timeValue.includes('1899')) {
+                    try {
+                        const date = new Date(timeValue);
+                        const hours = String(date.getHours()).padStart(2, '0');
+                        const minutes = String(date.getMinutes()).padStart(2, '0');
+                        return `${hours}:${minutes}`;
+                    } catch (e) {
+                        return '15:00';
+                    }
+                }
+                
+                return timeValue;
+            }
+            
+            const checkInTime = formatTime(settings.checkInTime) || '15:00';
+            const checkOutTime = formatTime(settings.checkOutTime) || '11:00';
+            
+            const checkInElement = document.getElementById('checkInTime');
+            const checkOutElement = document.getElementById('checkOutTime');
+            const priceElement = document.getElementById('pricePerNight');
+            
+            if (checkInElement) {
+                checkInElement.textContent = checkInTime;
+                console.log('✓ Check-in time set:', checkInTime);
+            }
+            if (checkOutElement) {
+                checkOutElement.textContent = checkOutTime;
+                console.log('✓ Check-out time set:', checkOutTime);
+            }
+            if (priceElement) {
+                priceElement.textContent = settings.pricePerNight || '89';
+                console.log('✓ Price set:', settings.pricePerNight);
             }
         }
-        
-        return timeValue;
-    }
-    
-    // Update UI - Check-in/Check-out Zeiten
-    const checkInTime = formatTime(settings.checkInTime) || '15:00';
-    const checkOutTime = formatTime(settings.checkOutTime) || '11:00';
-    
-    const checkInElement = document.getElementById('checkInTime');
-    const checkOutElement = document.getElementById('checkOutTime');
-    const priceElement = document.getElementById('pricePerNight');
-    
-    if (checkInElement) {
-        checkInElement.textContent = checkInTime;
-        console.log('✓ Check-in time set:', checkInTime);
-    }
-    if (checkOutElement) {
-        checkOutElement.textContent = checkOutTime;
-        console.log('✓ Check-out time set:', checkOutTime);
-    }
-    if (priceElement) {
-        priceElement.textContent = settings.pricePerNight || '89';
-        console.log('✓ Price set:', settings.pricePerNight);
-    }
-    
-    // FIX: Populate guests dropdown - GARANTIERT FUNKTIONIEREND
-    const maxGuests = parseInt(settings.maxGuests) || 4;
-    const select = document.getElementById('numGuests');
-    
-    console.log('📋 Populating guests dropdown...');
-    console.log('  maxGuests value:', settings.maxGuests);
-    console.log('  maxGuests parsed:', maxGuests);
-    console.log('  Select element:', select);
-    
-    if (!select) {
-        console.error('❌ CRITICAL: Element #numGuests not found in DOM!');
-        return;
-    }
-    
-    // Clear existing options
-    select.innerHTML = '';
-    console.log('  ✓ Cleared existing options');
-    
-    // Add placeholder
-    const placeholderOption = document.createElement('option');
-    placeholderOption.value = '';
-    placeholderOption.textContent = 'Sélectionnez...';
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-    select.appendChild(placeholderOption);
-    console.log('  ✓ Added placeholder');
-    
-    // Add guest options
-    for (let i = 1; i <= maxGuests; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = `${i} personne${i > 1 ? 's' : ''}`;
-        select.appendChild(option);
-        console.log(`  ✓ Added option ${i}: ${option.textContent}`);
-    }
-    
-    console.log('✅ Guests dropdown populated successfully!');
-    console.log('  Total options:', select.options.length);
-    console.log('  Select HTML:', select.innerHTML);
-}
 
         async function loadBookings() {
             console.log('📥 Loading bookings...');
@@ -1262,7 +1518,6 @@ function toggleFeatures() {
                 bookedDates = [];
                 bookings.forEach(booking => {
                     if (booking.status === 'confirmed') {
-                        // FIX: Korrekte Datumsberechnung ohne Timezone-Problem
                         const arrivalParts = booking.arrivalDate.split('-');
                         const departureParts = booking.departureDate.split('-');
                         
@@ -1305,20 +1560,16 @@ function toggleFeatures() {
                 blocked.forEach((period, index) => {
                     console.log(`Processing blocked period ${index + 1}:`, period);
                     
-                    // Verschiedene Datumsformate unterstützen
                     let startDate = period.startDate;
                     let endDate = period.endDate;
                     
-                    // Funktion zum Normalisieren des Datums
                     function normalizeDate(dateStr) {
                         if (!dateStr) return null;
                         
-                        // Bereits im Format YYYY-MM-DD
                         if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
                             return dateStr;
                         }
                         
-                        // Format: DD/MM/YYYY
                         if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)) {
                             const parts = dateStr.split('/');
                             const day = parts[0].padStart(2, '0');
@@ -1327,7 +1578,6 @@ function toggleFeatures() {
                             return `${year}-${month}-${day}`;
                         }
                         
-                        // Format: DD.MM.YYYY
                         if (/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(dateStr)) {
                             const parts = dateStr.split('.');
                             const day = parts[0].padStart(2, '0');
@@ -1336,7 +1586,6 @@ function toggleFeatures() {
                             return `${year}-${month}-${day}`;
                         }
                         
-                        // Versuche als ISO-Datum zu parsen
                         try {
                             const date = new Date(dateStr);
                             if (!isNaN(date.getTime())) {
@@ -1363,7 +1612,6 @@ function toggleFeatures() {
                         return;
                     }
                     
-                    // Alle Daten zwischen Start und Ende hinzufügen
                     const startParts = startDate.split('-');
                     const endParts = endDate.split('-');
                     
@@ -1438,7 +1686,6 @@ function toggleFeatures() {
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(year, month, day);
                 
-                // FIX: Korrekte Datumsstring-Erstellung
                 const dateYear = date.getFullYear();
                 const dateMonth = String(date.getMonth() + 1).padStart(2, '0');
                 const dateDay = String(date.getDate()).padStart(2, '0');
@@ -1449,35 +1696,25 @@ function toggleFeatures() {
                 dayElement.textContent = day;
                 dayElement.dataset.date = dateStr;
                 
-                // WICHTIG: Prüfung in der richtigen Reihenfolge
-                // Zuerst prüfen ob blockiert oder gebucht (nicht klickbar)
-                // Dann erst selected/in-range Styling hinzufügen
-                
                 let isClickable = true;
                 
                 if (date < today) {
-                    // Vergangene Daten
                     dayElement.classList.add('blocked');
                     isClickable = false;
                 } else if (blockedDates.includes(dateStr)) {
-                    // FIX: Blockierte Daten - WICHTIG: Diese haben Priorität!
                     dayElement.classList.add('blocked');
                     isClickable = false;
                     console.log('🚫 Rendering blocked date:', dateStr);
                 } else if (bookedDates.includes(dateStr)) {
-                    // Gebuchte Daten
                     dayElement.classList.add('booked');
                     isClickable = false;
                 } else {
-                    // Verfügbare Daten
                     dayElement.classList.add('available');
                 }
                 
-                // Nur bei verfügbaren Daten: Click-Handler und Selection-Styling
                 if (isClickable) {
                     dayElement.addEventListener('click', () => selectDate(dateStr));
                     
-                    // Markierung für ausgewählte Daten
                     if (selectedStartDate && dateStr === selectedStartDate) {
                         dayElement.classList.add('selected');
                     }
@@ -1485,7 +1722,6 @@ function toggleFeatures() {
                         dayElement.classList.add('selected');
                     }
                     
-                    // Markierung für Bereich zwischen Start und Ende
                     if (selectedStartDate && selectedEndDate) {
                         const selectedStart = new Date(selectedStartDate);
                         const selectedEnd = new Date(selectedEndDate);
@@ -1505,25 +1741,21 @@ function toggleFeatures() {
             console.log('📅 Date selected:', dateStr);
             
             if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
-                // Neue Auswahl starten
                 selectedStartDate = dateStr;
                 selectedEndDate = null;
                 document.getElementById('arrivalDate').value = dateStr;
                 document.getElementById('departureDate').value = '';
                 document.getElementById('priceSummary').style.display = 'none';
             } else {
-                // Auswahl abschließen
                 const start = new Date(selectedStartDate);
                 const end = new Date(dateStr);
                 
                 if (end <= start) {
-                    // Wenn Ende vor Start liegt, neue Auswahl starten
                     selectedStartDate = dateStr;
                     selectedEndDate = null;
                     document.getElementById('arrivalDate').value = dateStr;
                     document.getElementById('departureDate').value = '';
                 } else {
-                    // Prüfen ob Bereich gültig ist
                     let isValid = true;
                     const startParts = selectedStartDate.split('-');
                     const endParts = dateStr.split('-');
@@ -1567,7 +1799,6 @@ function toggleFeatures() {
                 return;
             }
             
-            // FIX: Korrekte Nächte-Berechnung
             const startParts = selectedStartDate.split('-');
             const endParts = selectedEndDate.split('-');
             
@@ -1643,7 +1874,6 @@ function toggleFeatures() {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Envoi en cours...';
             
-            // FIX: Korrekte Nächte-Berechnung
             const startParts = selectedStartDate.split('-');
             const endParts = selectedEndDate.split('-');
             
@@ -1670,6 +1900,10 @@ function toggleFeatures() {
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 numGuests: parseInt(document.getElementById('numGuests').value),
+                adults: parseInt(document.getElementById('adults').value),
+                children: parseInt(document.getElementById('children').value),
+                babies: parseInt(document.getElementById('babies').value),
+                guestsDetail: `${guestsData.adults} adulte(s), ${guestsData.children} enfant(s), ${guestsData.babies} bébé(s)`,
                 arrivalDate: selectedStartDate,
                 departureDate: selectedEndDate,
                 numNights: nights,
@@ -1693,6 +1927,8 @@ function toggleFeatures() {
                     document.getElementById('bookingForm').reset();
                     selectedStartDate = null;
                     selectedEndDate = null;
+                    guestsData = { adults: 1, children: 0, babies: 0 };
+                    updateGuestsDisplay();
                     document.getElementById('priceSummary').style.display = 'none';
                     await loadBookings();
                     renderCalendar();
@@ -1723,117 +1959,242 @@ function toggleFeatures() {
         
         console.log('✅ Script loaded');
     </script>
-<!-- Lightbox mit Pfeilen -->
-<div id="lightbox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center;">
-    
-    <!-- Schließen Button -->
-    <span onclick="closeLightbox()" style="position: absolute; top: 20px; right: 40px; color: white; font-size: 50px; cursor: pointer; z-index: 10001; font-weight: 300; transition: all 0.3s; user-select: none;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='white'">&times;</span>
-    
-    <!-- Linker Pfeil -->
-    <div onclick="changeImage(-1)" style="position: absolute; left: 30px; top: 50%; transform: translateY(-50%); color: white; font-size: 60px; cursor: pointer; z-index: 10001; user-select: none; padding: 20px; transition: all 0.3s; background: rgba(0,0,0,0.3); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(102,126,234,0.8)'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='rgba(0,0,0,0.3)'; this.style.transform='translateY(-50%) scale(1)'">
-        &#10094;
-    </div>
-    
-    <!-- Rechter Pfeil -->
-    <div onclick="changeImage(1)" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); color: white; font-size: 60px; cursor: pointer; z-index: 10001; user-select: none; padding: 20px; transition: all 0.3s; background: rgba(0,0,0,0.3); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(102,126,234,0.8)'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='rgba(0,0,0,0.3)'; this.style.transform='translateY(-50%) scale(1)'">
-        &#10095;
-    </div>
-    
-    <!-- Bild -->
-    <img id="lightbox-img" style="max-width: 85%; max-height: 85%; border-radius: 10px; box-shadow: 0 0 50px rgba(0,0,0,0.5); transition: opacity 0.3s;">
-    
-    <!-- Bild-Zähler -->
-    <div id="image-counter" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: white; font-size: 18px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 20px; font-weight: 600;">
-        1 / 5
-    </div>
-</div>
 
-<script>
-// Array mit allen Bildern
+    <!-- Lightbox mit Pfeilen -->
+    <div id="lightbox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center;">
+        
+        <span onclick="closeLightbox()" style="position: absolute; top: 20px; right: 40px; color: white; font-size: 50px; cursor: pointer; z-index: 10001; font-weight: 300; transition: all 0.3s; user-select: none;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='white'">&times;</span>
+        
+        <div onclick="changeImage(-1)" style="position: absolute; left: 30px; top: 50%; transform: translateY(-50%); color: white; font-size: 60px; cursor: pointer; z-index: 10001; user-select: none; padding: 20px; transition: all 0.3s; background: rgba(0,0,0,0.3); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(102,126,234,0.8)'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='rgba(0,0,0,0.3)'; this.style.transform='translateY(-50%) scale(1)'">
+            &#10094;
+        </div>
+        
+        <div onclick="changeImage(1)" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); color: white; font-size: 60px; cursor: pointer; z-index: 10001; user-select: none; padding: 20px; transition: all 0.3s; background: rgba(0,0,0,0.3); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(102,126,234,0.8)'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='rgba(0,0,0,0.3)'; this.style.transform='translateY(-50%) scale(1)'">
+            &#10095;
+        </div>
+        
+        <img id="lightbox-img" style="max-width: 85%; max-height: 85%; border-radius: 10px; box-shadow: 0 0 50px rgba(0,0,0,0.5); transition: opacity 0.3s;">
+        
+        <div id="image-counter" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: white; font-size: 18px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 20px; font-weight: 600;">
+            1 / 2
+        </div>
+    </div>
+
+    <script>
+    // Array mit allen Bildern
 const galleryImages = [
     {
         src: 'images/Cover.jpg',
-        alt: 'Appartement'
+        alt: 'Appartement principal'
     },
     {
         src: 'images/CH_1.jpg',
-        alt: 'Chambre'
+        alt: 'Chambre 1'
     },
-    
+    {
+        src: 'images/CH_2.jpg',
+        alt: 'Salon'
+    },
+    {
+        src: 'images/CH_3.jpg',
+        alt: 'Cuisine'
+    },
+    {
+        src: 'images/CH_4.jpg',
+        alt: 'Salle de bain'
+    },
+    {
+        src: 'images/CH_5.jpg',
+        alt: 'Chambre 2'
+    },
+    {
+        src: 'images/CH_6.jpg',
+        alt: 'Salon 2'
+    },
+    {
+        src: 'images/CH_7.jpg',
+        alt: 'Extérieur'
+    },
+    {
+        src: 'images/CH_8.jpg',
+        alt: 'Jardin'
+    },
+    {
+        src: 'images/CH_9.jpg',
+        alt: 'Terrasse'
+    },
+    {
+        src: 'images/CH_10.jpg',
+        alt: 'Vue'
+    },
+    {
+        src: 'images/SDS_1.jpg',
+        alt: 'Vue montagne'
+    },
+    {
+        src: 'images/SDS_2.jpg',
+        alt: 'Entrée'
+    },
+    {
+        src: 'images/SDS_3.jpg',
+        alt: 'Couloir'
+    },
+    {
+        src: 'images/SDS_4.jpg',
+        alt: 'Détail'
+    },
+    {
+        src: 'images/SDS_5.jpg',
+        alt: 'Détail'
+    },
+    {
+        src: 'images/SDS_6.jpg',
+        alt: 'Vue de nuit'
+    },
+    {
+        src: 'images/CUI_1.jpg',
+        alt: 'En hiver'
+    },
+    {
+        src: 'images/CUI_2.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/CUI_3.jpg',
+        alt: 'En automne'
+    },
+    {
+        src: 'images/CUI_4.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/CUI_5.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/CUI_6.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/CUI_7.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/SDB_1.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/SDB_2.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/SDB_3.jpeg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/WC.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/J_1.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/J_2.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/J_3.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/J_4.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/CUL_1.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/CUL_2.jpg',
+        alt: 'En été'
+    },
+    {
+        src: 'images/CUL_3.jpg',
+        alt: 'En été'
+    }
 ];
 
-let currentImageIndex = 0;
-
-// Lightbox öffnen
-function openLightbox(index) {
-    currentImageIndex = index;
-    showImage();
-    document.getElementById('lightbox').style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // Verhindert Scrollen
-}
-
-// Lightbox schließen
-function closeLightbox() {
-    document.getElementById('lightbox').style.display = 'none';
-    document.body.style.overflow = 'auto'; // Erlaubt wieder Scrollen
-}
-
-// Bild wechseln
-function changeImage(direction) {
-    currentImageIndex += direction;
-    
-    // Loop: Wenn am Ende, gehe zum Anfang
-    if (currentImageIndex >= galleryImages.length) {
-        currentImageIndex = 0;
+// Automatisch "Weitere XX Bilder" berechnen
+document.addEventListener('DOMContentLoaded', function() {
+    const remainingPhotos = galleryImages.length - 5; // 5 = 1 Hauptbild + 4 Thumbnails
+    const remainingElement = document.getElementById('remaining-photos');
+    if (remainingElement && remainingPhotos > 0) {
+        remainingElement.textContent = remainingPhotos;
     }
-    // Loop: Wenn am Anfang, gehe zum Ende
-    if (currentImageIndex < 0) {
-        currentImageIndex = galleryImages.length - 1;
-    }
-    
-    showImage();
-}
+});
 
-// Bild anzeigen
-function showImage() {
-    const img = document.getElementById('lightbox-img');
-    const counter = document.getElementById('image-counter');
-    
-    // Fade-out Effekt
-    img.style.opacity = '0';
-    
-    setTimeout(() => {
-        img.src = galleryImages[currentImageIndex].src;
-        img.alt = galleryImages[currentImageIndex].alt;
-        counter.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
+    let currentImageIndex = 0;
+
+    function openLightbox(index) {
+        currentImageIndex = index;
+        showImage();
+        document.getElementById('lightbox').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function changeImage(direction) {
+        currentImageIndex += direction;
         
-        // Fade-in Effekt
-        img.style.opacity = '1';
-    }, 150);
-}
-
-// Tastatur-Steuerung
-document.addEventListener('keydown', function(e) {
-    const lightbox = document.getElementById('lightbox');
-    if (lightbox.style.display === 'flex') {
-        if (e.key === 'Escape') {
-            closeLightbox();
-        } else if (e.key === 'ArrowLeft') {
-            changeImage(-1);
-        } else if (e.key === 'ArrowRight') {
-            changeImage(1);
+        if (currentImageIndex >= galleryImages.length) {
+            currentImageIndex = 0;
         }
+        if (currentImageIndex < 0) {
+            currentImageIndex = galleryImages.length - 1;
+        }
+        
+        showImage();
     }
-});
 
-// Klick außerhalb des Bildes schließt Lightbox
-document.getElementById('lightbox').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeLightbox();
+    function showImage() {
+        const img = document.getElementById('lightbox-img');
+        const counter = document.getElementById('image-counter');
+        
+        img.style.opacity = '0';
+        
+        setTimeout(() => {
+            img.src = galleryImages[currentImageIndex].src;
+            img.alt = galleryImages[currentImageIndex].alt;
+            counter.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
+            
+            img.style.opacity = '1';
+        }, 150);
     }
-});
-</script>
 
+    document.addEventListener('keydown', function(e) {
+        const lightbox = document.getElementById('lightbox');
+        if (lightbox.style.display === 'flex') {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                changeImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeImage(1);
+            }
+        }
+    });
+
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeLightbox();
+        }
+    });
+    </script>
 
 </body>
 </html>
