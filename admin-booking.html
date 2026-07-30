@@ -949,46 +949,33 @@
         }
         
         async function deleteBooking(id) {
-            if (!confirm('Möchten Sie diese Buchung wirklich stornieren?\n\nEine Stornierungsemail wird an den Gast gesendet.')) {
-                return;
-            }
-            
-            const reason = prompt('Grund für die Stornierung:', 'Die Anzahlung wurde nicht innerhalb der vorgegebenen Frist überwiesen.');
-            
-            if (!reason) {
-                alert('Stornierung abgebrochen - kein Grund angegeben.');
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')) {
                 return;
             }
             
             try {
-                showLoading(true);
-                
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     body: JSON.stringify({
-                        action: 'cancelBooking',
-                        bookingId: id,
-                        reason: reason
+                        action: 'deleteBooking',
+                        id: id
                     })
                 });
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    showNotification('Buchung storniert und Email gesendet!', 'success');
-                    await loadBookings();
+                    showMessage('Réservation supprimée', 'success');
+                    await loadData();
                 } else {
-                    showNotification('Fehler: ' + result.message, 'error');
+                    showMessage('Erreur lors de la suppression', 'error');
                 }
-                
             } catch (error) {
                 console.error('Error:', error);
-                showNotification('Fehler beim Stornieren: ' + error.message, 'error');
-            } finally {
-                showLoading(false);
+                showMessage('Erreur lors de la suppression', 'error');
             }
         }
-        
+
 
         
         
