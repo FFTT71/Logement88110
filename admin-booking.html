@@ -848,13 +848,14 @@
                             <p>${booking.specialRequests}</p>
                         </div>
                     ` : ''}
-                    
+                     
                     <div class="booking-actions">
                         ${booking.status === 'pending' ? `
                             <button class="btn btn-confirm" onclick="updateBookingStatus('${booking.id}', 'confirmed')">
                                 ✓ Confirmer
                             </button>
-                            <button class="btn btn-reject" onclick="updateBookingStatus('${booking.id}', 'rejected')">
+                        
+                            <button class="btn btn-reject" onclick="cancelBooking('${booking.id}', 'rejected')">
                                 ✗ Rejeter
                             </button>
                         ` : ''}
@@ -865,7 +866,7 @@
                             </button>
                         ` : ''}
                         
-                        <button class="btn btn-contact" onclick="contactGuest('${booking.email}', '${booking.guestName}')">
+                        <button class="btn btn-contact" onclick="cancelBooking('${booking.id}')">
                             ✉️ Contacter
                         </button>
                         
@@ -1206,6 +1207,77 @@
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    </script>
+
+           // Buchung bestätigen
+    async function confirmBooking(id) {
+        if (!confirm('Voulez-vous confirmer cette réservation ?')) {
+            return;
+        }
+        
+        try {
+            showLoading(true);
+            
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'updateBookingStatus',
+                    bookingId: id,
+                    status: 'confirmed'
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Réservation confirmée !', 'success');
+                await loadBookings();
+            } else {
+                showNotification('Erreur : ' + (result.message || 'Erreur inconnue'), 'error');
+            }
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Erreur : ' + error.message, 'error');
+        } finally {
+            showLoading(false);
+        }
+    }
+    
+    // Buchung stornieren
+    async function cancelBooking(id) {
+        if (!confirm('Voulez-vous vraiment annuler cette réservation ?\n\nUn email sera envoyé au client.')) {
+            return;
+        }
+        
+        try {
+            showLoading(true);
+            
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'cancelBooking',
+                    bookingId: id
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Réservation annulée et email envoyé !', 'success');
+                await loadBookings();
+            } else {
+                showNotification('Erreur : ' + (result.message || 'Erreur inconnue'), 'error');
+            }
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Erreur : ' + error.message, 'error');
+        } finally {
+            showLoading(false);
+        }
+    }
+    
+</script>
+
 </body>
 </html>
