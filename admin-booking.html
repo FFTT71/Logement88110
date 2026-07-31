@@ -1245,37 +1245,29 @@
     
     // Buchung stornieren
     async function cancelBooking(id) {
-        if (!confirm('Voulez-vous vraiment annuler cette réservation ?\n\nUn email sera envoyé au client.')) {
-            return;
-        }
-        
-        try {
-            showLoading(true);
-            
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'cancelBooking',
-                    bookingId: id
-                })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                showNotification('Réservation annulée et email envoyé !', 'success');
-                await loadBookings();
-            } else {
-                showNotification('Erreur : ' + (result.message || 'Erreur inconnue'), 'error');
+         try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'cancelBooking',
+                        id: id,
+              
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('Statut de paiement mis à jour', 'success');
+                    await loadData();
+                } else {
+                    showMessage('Erreur lors de la mise à jour', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Erreur lors de la mise à jour', 'error');
             }
-            
-        } catch (error) {
-            console.error('Error:', error);
-            showNotification('Erreur : ' + error.message, 'error');
-        } finally {
-            showLoading(false);
         }
-    }
     
 </script>
 
