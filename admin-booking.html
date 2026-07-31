@@ -855,15 +855,18 @@
                                 ✓ Confirmer
                             </button>
                         
-                            <button class="btn btn-reject" onclick="cancelBooking('${booking.id}', 'rejected')">
-                                ✗ Rejeter
-                            </button>
+                            
                         ` : ''}
                         
                         ${booking.status === 'confirmed' ? `
                             <button class="btn btn-paid" onclick="updatePaymentStatus('${booking.id}', '${booking.paymentStatus === 'paid' ? 'unpaid' : 'paid'}')">
                                 ${booking.paymentStatus === 'paid' ? '💳 Marquer non payé' : '💳 Marquer payé'}
                             </button>
+
+                            <button class="btn btn-reject" onclick="cancelBooking('${booking.id}', 'rejected')">
+                                ✗ Rejeter
+                            </button>
+                            
                         ` : ''}
                         
                         <button class="btn btn-delete" onclick="deleteBooking('${booking.id}')">
