@@ -983,52 +983,6 @@
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         }
 
-// Buchung stornieren
-        async function cancelBooking(id) {
-            if (!confirm('Voulez-vous vraiment annuler cette réservation ?\n\nUn email d\'annulation sera envoyé au client.')) {
-                return;
-            }
-            
-            const reason = prompt(
-                'Motif de l\'annulation :',
-                'L\'acompte n\'a pas été reçu dans les délais impartis.'
-            );
-            
-            if (!reason) {
-                showNotification('Annulation abandonnée', 'error');
-                return;
-            }
-            
-            try {
-                showLoading(true);
-                
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'cancelBooking',
-                        bookingId: id,
-                        reason: reason
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showNotification('Réservation annulée et email envoyé !', 'success');
-                    await loadBookings();
-                } else {
-                    showNotification('Erreur : ' + (result.message || 'Erreur inconnue'), 'error');
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Erreur : ' + error.message, 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        
         // Blocked Periods
         function displayBlocked() {
             const list = document.getElementById('blockedList');
