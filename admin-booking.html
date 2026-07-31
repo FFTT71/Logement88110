@@ -1245,7 +1245,11 @@
     
     // Buchung stornieren
     async function cancelBooking(id) {
-         try {
+        if (!confirm('Voulez-vous vraiment annuler cette réservation ?\n\nUn email sera envoyé au client.')) {
+            return;
+        }
+ 
+        try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     body: JSON.stringify({
