@@ -977,7 +977,7 @@
             }
         }
         
-        function contactGuest(email, name) {
+        function cancelBooking(email, name) {
             const subject = encodeURIComponent(`Votre réservation - La maison du Nid Vosgien`);
             const body = encodeURIComponent(`Bonjour ${name},\n\n`);
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
