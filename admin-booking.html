@@ -531,47 +531,7 @@
             <button class="tab active" onclick="switchTab('bookings')">📋 Réservations</button>
             <button class="tab" onclick="switchTab('blocked')">🚫 Périodes bloquées</button>
             <button class="tab" onclick="switchTab('settings')">⚙️ Paramètres</button>
-            <button class="tab-btn" onclick="showTab('visitors')">👥 Visiteurs</button> <!-- ⬅️ NEU -->
         </div>
-
-        <!-- Visitors Tab -->
-            <div id="visitorsTab" class="tab-content" style="display: none;">
-                <div class="card">
-                    <h2>👥 Statistiques des visiteurs</h2>
-                    
-                    <div class="stats">
-                        <div class="stat-card">
-                            <div class="stat-number" id="totalVisitors">0</div>
-                            <div class="stat-label">Total visiteurs</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="todayVisitors">0</div>
-                            <div class="stat-label">Aujourd'hui</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="weekVisitors">0</div>
-                            <div class="stat-label">Cette semaine</div>
-                        </div>
-                    </div>
-                    
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Heure</th>
-                                    <th>Adresse IP</th>
-                                    <th>Navigateur</th>
-                                    <th>Page</th>
-                                </tr>
-                            </thead>
-                            <tbody id="visitorsTable">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
         
         <!-- Tab: Bookings -->
         <div id="tab-bookings" class="tab-content active">
