@@ -1318,10 +1318,55 @@
     <div class="footer">
         <p>&copy; 2026 Maison du Nid Vosgien - Tous droits réservés</p>
     </div>
+
+
+     <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbysOQkznev7o7NJej2ZxPzKp9IRlrxrj31GbdFGtJHdzxrB70iSlH_kMW4JJEHPkNnZYg/exec';
+    // ============================================
+    // VISITOR TRACKING
+    // ============================================
     
+    // Beim Laden der Seite Besucher tracken
+    window.addEventListener('DOMContentLoaded', function() {
+        trackVisitor();
+    });
+    
+    async function trackVisitor() {
+        try {
+            // IP-Adresse abrufen (von externer API)
+            let ipAddress = 'N/A';
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                ipAddress = ipData.ip;
+            } catch (e) {
+                console.log('Could not get IP:', e);
+            }
+            
+            // User Agent
+            const userAgent = navigator.userAgent;
+            
+            // Tracking-Request senden
+            const trackingUrl = `${API_URL}?action=trackVisitor&ip=${encodeURIComponent(ipAddress)}&userAgent=${encodeURIComponent(userAgent)}&page=booking.html&timestamp=${Date.now()}`;
+            
+            fetch(trackingUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Visitor tracked:', data);
+                })
+                .catch(error => {
+                    console.log('Tracking error:', error);
+                });
+                
+        } catch (error) {
+            console.log('Tracking error:', error);
+        }
+    }
+    
+   
     <script>
         // API URL
-        const API_URL = 'https://script.google.com/macros/s/AKfycbysOQkznev7o7NJej2ZxPzKp9IRlrxrj31GbdFGtJHdzxrB70iSlH_kMW4JJEHPkNnZYg/exec';
+        //const API_URL = 'https://script.google.com/macros/s/AKfycbysOQkznev7o7NJej2ZxPzKp9IRlrxrj31GbdFGtJHdzxrB70iSlH_kMW4JJEHPkNnZYg/exec';
         
         let settings = {};
         let bookedDates = [];
