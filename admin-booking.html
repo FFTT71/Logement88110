@@ -980,12 +980,6 @@
                 showMessage('Erreur lors de la suppression', 'error');
             }
         }
-        
-        function contactGuest(email, name) {
-            const subject = encodeURIComponent(`Votre réservation - La maison du Nid Vosgien`);
-            const body = encodeURIComponent(`Bonjour ${name},\n\n`);
-            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-        }
 
         // Blocked Periods
         function displayBlocked() {
@@ -1276,6 +1270,40 @@
                 showMessage('Erreur lors de la mise à jour', 'error');
             }
         }
+
+
+
+         // Senden Document
+    async function contactGuest(id) {
+        if (!confirm('Voulez-vous envoyer le document ?\n\nUn email sera envoyé au client.')) {
+            return;
+        }
+ 
+        try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'contactGuest',
+                        bookingId: id,
+              
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('Document joint et email envoyé !', 'success');
+                    await loadData();
+                } else {
+                    showMessage('Erreur lors de la mise à jour', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Erreur lors de la mise à jour', 'error');
+            }
+        }
+
+        
     
 </script>
 
