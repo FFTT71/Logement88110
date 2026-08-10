@@ -866,6 +866,11 @@
                             <button class="btn btn-reject" onclick="cancelBooking('${booking.id}', 'rejected')">
                                 ✗ Rejeter
                             </button>
+
+                            <button class="btn btn-contact" onclick="contactGuest('${booking.email}', '${booking.guestName}')">
+                            ✉️ Contacter
+                           </button>
+
                             
                         ` : ''}
                         
