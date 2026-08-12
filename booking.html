@@ -2507,6 +2507,25 @@ document.addEventListener('DOMContentLoaded', function() {
             closeLightbox();
         }
     });
+    
+// ============================================
+// AUTO-UPDATE (Optional)
+// ============================================
+
+// Buchungen automatisch alle 30 Sekunden aktualisieren
+setInterval(async function() {
+    console.log('🔄 Auto-refresh: Loading bookings and blocked dates...');
+    await loadBookings();
+    await loadBlockedDates();
+    renderCalendar();
+}, 5000); // 30000 = 30 Sekunden
+
+    
+    
+    
+    
+    
+    
     </script>
 
 </body>
